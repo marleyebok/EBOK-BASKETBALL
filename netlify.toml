@@ -1,0 +1,16 @@
+# Déploiement Netlify (hébergement statique).
+# Vercel & Cloudflare Pages fonctionnent aussi sans config : build `npm run build`,
+# dossier de publication `dist`. Voir README.md.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# En-têtes de cache : les assets fingerprintés d'Astro sont immuables.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
