@@ -1,0 +1,61 @@
+---
+/**
+ * Layout de base : <head> (SEO / Open Graph), polices self-hostées,
+ * styles globaux. Toutes les pages passent par ici.
+ */
+
+// Polices self-hostées (perf + pas de dépendance à Google Fonts au runtime).
+import '@fontsource/anton'; // titres & logo (poids 400 unique)
+import '@fontsource-variable/inter'; // corps de texte (variable)
+
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'EBOK Basketball — la boîte à outils des basketteurs',
+  description = "Neuf outils qui gravitent autour d'une même idée : un écosystème complet pour les coachs, joueurs et clubs de basket francophones, du terrain à l'analyse.",
+} = Astro.props;
+
+// URL canonique / OG absolue (repose sur `site` dans astro.config.mjs).
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og-image.svg', Astro.site).href;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#5cc0ff" />
+
+    <!-- Favicon (basketball néon vectoriel) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EBOK Basketball" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
