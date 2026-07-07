@@ -3,6 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Site vitrine EBOK Basketball — la boîte à outils des basketteurs francophones.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
