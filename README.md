@@ -57,20 +57,36 @@ src/
 │   ├── Header.astro        # logo centré
 │   ├── Logo.astro          # logo « EBOK BASKETBALL » (marque)
 │   ├── ToolLogo.astro      # logo « EBOK <NOM> » d'un outil (100 % CSS)
-│   ├── Hero.astro          # surtitre + titre + sous-titre
-│   ├── ToolGrid.astro      # grille + script d'ouverture au clic (mobile)
-│   ├── ToolCard.astro      # une carte : logo + statut + description
+│   ├── Hero.astro          # titre + ligne de synthèse + CTA accès anticipé
+│   ├── ToolGrid.astro      # grille des outils
+│   ├── ToolCard.astro      # une carte : logo + statut LED + description
 │   ├── ContactSection.astro
 │   └── Footer.astro
 ├── styles/
-│   └── global.css          # thème clair, logo, cartes, sections
+│   └── global.css          # thème clair, logo, cartes, sections, formulaire
+├── config.ts               # ⚙️ Formspree, e-mail, analytics (voir ci-dessous)
 └── pages/
-    └── index.astro
+    ├── index.astro
+    └── acces-anticipe.astro # formulaire d'inscription au programme bêta
 public/
 ├── favicon.svg
-├── og-image.svg            # aperçu Open Graph (placeholder — voir NOTES.md)
+├── og-image.png            # aperçu Open Graph (1200×630)
+├── robots.txt
 └── logos/                  # les 10 logos en PNG HD (fond transparent)
 ```
+
+---
+
+## Configuration ([`src/config.ts`](src/config.ts))
+
+- **Formulaire d'accès anticipé** : par défaut il fonctionne via un repli
+  `mailto:`. Pour collecter proprement les e-mails, crée un formulaire gratuit
+  sur [Formspree](https://formspree.io) et colle son URL dans `formspreeEndpoint`.
+- **Analytics** (optionnel, sans cookies) : crée le site sur
+  [Plausible](https://plausible.io) et renseigne `plausibleDomain` pour activer
+  la mesure d'audience. Vide = désactivé.
+- **SEO** : `sitemap-index.xml` généré au build, `robots.txt` fourni, et données
+  structurées JSON-LD injectées dans le `<head>`.
 
 ---
 

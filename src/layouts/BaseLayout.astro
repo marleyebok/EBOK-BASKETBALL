@@ -1,7 +1,7 @@
 ---
 /**
- * Layout de base : <head> (SEO / Open Graph), polices self-hostées,
- * styles globaux. Toutes les pages passent par ici.
+ * Layout de base : <head> (SEO / Open Graph / JSON-LD), polices self-hostées,
+ * styles globaux, analytics optionnel. Toutes les pages passent par ici.
  */
 
 // Polices self-hostées (perf + pas de dépendance à Google Fonts au runtime).
@@ -9,6 +9,7 @@ import '@fontsource/anton'; // titres & logo (poids 400 unique)
 import '@fontsource-variable/inter'; // corps de texte (variable)
 
 import '../styles/global.css';
+import { siteConfig } from '../config';
 
 interface Props {
   title?: string;
@@ -17,12 +18,24 @@ interface Props {
 
 const {
   title = 'EBOK Basketball — la boîte à outils des basketteurs',
-  description = "Neuf outils qui gravitent autour d'une même idée : un écosystème complet pour les coachs, joueurs et clubs de basket francophones, du terrain à l'analyse.",
+  description = 'Neuf outils pour les coachs, joueurs et clubs de basket francophones — du terrain à l\'analyse. L\'écosystème EBOK Basketball.',
 } = Astro.props;
 
 // URL canonique / OG absolue (repose sur `site` dans astro.config.mjs).
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/og-image.svg', Astro.site).href;
+const ogImage = new URL('/og-image.png', Astro.site).href;
+const siteUrl = new URL('/', Astro.site).href;
+
+// Données structurées (SEO) : aide les moteurs à comprendre le site.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'EBOK Basketball',
+  description,
+  url: siteUrl,
+  logo: ogImage,
+  email: siteConfig.contactEmail,
+};
 ---
 
 <!doctype html>
@@ -35,9 +48,8 @@ const ogImage = new URL('/og-image.svg', Astro.site).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#5cc0ff" />
+    <meta name="theme-color" content="#1f6fe5" />
 
-    <!-- Favicon (basketball néon vectoriel) -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Open Graph -->
@@ -47,6 +59,8 @@ const ogImage = new URL('/og-image.svg', Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="fr_FR" />
 
     <!-- Twitter / X -->
@@ -54,6 +68,17 @@ const ogImage = new URL('/og-image.svg', Astro.site).href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+    <!-- Données structurées -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Analytics respectueux de la vie privée (activé si un domaine est configuré) -->
+    {siteConfig.plausibleDomain && (
+      <script
+        defer
+        data-domain={siteConfig.plausibleDomain}
+        src="https://plausible.io/js/script.js"></script>
+    )}
   </head>
   <body>
     <slot />

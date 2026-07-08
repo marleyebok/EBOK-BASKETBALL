@@ -1,11 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
-// Site 100 % statique. Renseigne `site` avec ton domaine de prod :
-// il sert aux URL canoniques et aux balises Open Graph absolues.
-// À remplacer par le vrai domaine EBOK Basketball le jour du déploiement.
+// Site 100 % statique. `site` = domaine de prod : sert aux URL canoniques,
+// aux balises Open Graph absolues et au sitemap.
+// À remplacer par le domaine définitif (ex. https://ebok-basketball.fr) le
+// jour où il sera branché sur Vercel.
 export default defineConfig({
-  site: 'https://ebok-basketball.fr',
-  // Sortie statique : chaque page est pré-rendue en HTML au build.
+  site: 'https://ebok-basketball.vercel.app',
   output: 'static',
+  integrations: [sitemap()],
 });

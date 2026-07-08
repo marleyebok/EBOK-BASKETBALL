@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { TOOLS } from '../data/tools';
+import { siteConfig } from '../config';
+
+const title = 'Accès anticipé — EBOK Basketball';
+const description =
+  "Rejoignez le programme d'accès anticipé EBOK Basketball : testez les outils en avant-première et aidez à les façonner.";
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main class="wrap form-page">
+    <div class="form-card">
+      <span class="eyebrow"><span class="dot"></span> Programme bêta · Accès anticipé</span>
+      <h1>Testez les outils EBOK en avant-première</h1>
+      <p class="lede">
+        Laissez votre e-mail et choisissez les outils qui vous intéressent. Vous
+        serez averti dès l'ouverture de leur accès anticipé, avant tout le monde.
+      </p>
+
+      <form id="ea-form" data-endpoint={siteConfig.formspreeEndpoint} novalidate>
+        <label class="field">
+          <span class="label">Votre e-mail</span>
+          <input type="email" name="email" required autocomplete="email" placeholder="vous@exemple.fr" />
+        </label>
+
+        <div class="field">
+          <span class="label">Quels outils vous intéressent ?</span>
+          <div class="tool-picker">
+            {TOOLS.map((t) => (
+              <label class="pick" style={`--c:${t.color}`}>
+                <input type="checkbox" name="tools" value={`EBOK ${t.name}`} />
+                <span class="swatch"></span>
+                {t.name}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <input type="hidden" name="_subject" value="Nouvelle inscription — Accès anticipé EBOK" />
+        <button type="submit" class="contact-btn form-submit">Je veux un accès anticipé</button>
+        <p class="form-note">Aucun spam. Désinscription possible à tout moment.</p>
+      </form>
+
+      <div id="ea-thanks" hidden style="text-align:center;padding:12px 0">
+        <h1>Merci ! 🏀</h1>
+        <p class="lede">Votre demande est bien enregistrée. On vous écrit dès l'ouverture des accès.</p>
+        <a class="btn-ghost" href="/">Retour à l'accueil</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('ea-form') as HTMLFormElement | null;
+  const thanks = document.getElementById('ea-thanks');
+  const contactEmail = 'Ebok.basket@gmail.com';
+  if (form && thanks) {
+    const showThanks = () => {
+      form.hidden = true;
+      thanks.hidden = false;
+      thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    const mailto = (email: string, tools: string[]) => {
+      const body = `E-mail : ${email}\nOutils souhaités : ${tools.length ? tools.join(', ') : '—'}`;
+      return `mailto:${contactEmail}?subject=${encodeURIComponent('Accès anticipé EBOK')}&body=${encodeURIComponent(body)}`;
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+      const tools = [...form.querySelectorAll<HTMLInputElement>('input[name="tools"]:checked')].map((i) => i.value);
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        try {
+          const res = await fetch(endpoint, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+          if (res.ok) return showThanks();
+        } catch (_) {
+          /* repli mailto ci-dessous */
+        }
+      }
+      // Repli sans backend : ouvre le client mail pré-rempli.
+      window.location.href = mailto(email, tools);
+      showThanks();
+    });
+  }
+</script>

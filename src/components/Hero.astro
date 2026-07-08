@@ -1,5 +1,14 @@
 ---
-/** Hero : surtitre, titre, sous-titre. */
+/** Hero : surtitre, titre, sous-titre, ligne de synthèse, accès anticipé. */
+import { TOOLS } from '../data/tools';
+
+// Compteurs par statut pour la ligne de synthèse.
+const count = (s: string) => TOOLS.filter((t) => t.status === s).length;
+const tally = [
+  { key: 'on', n: count('on'), label: 'en ligne' },
+  { key: 'dev', n: count('dev'), label: 'en développement' },
+  { key: 'off', n: count('off'), label: 'à venir' },
+];
 ---
 
 <section class="hero wrap" aria-labelledby="hero-title">
@@ -9,4 +18,20 @@
     Neuf outils pour les coachs, joueurs et clubs francophones — du terrain à
     l'analyse. Chaque outil ouvre son propre site.
   </p>
+
+  <div class="tally" aria-label="État de l'écosystème">
+    {tally.map((t) => (
+      <span class={`status st-${t.key}`}>
+        <span class="led"></span>
+        <span class="count">{t.n}</span>&nbsp;{t.label}
+      </span>
+    ))}
+  </div>
+
+  <div class="hero-actions">
+    <a class="btn-ghost" href="/acces-anticipe">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+      Demander un accès anticipé
+    </a>
+  </div>
 </section>

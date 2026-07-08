@@ -93,11 +93,18 @@ Recommandations quand les sous-sites arriveront :
   optionnel `external: true` aux données et l'exploiter dans `ToolCard.astro`
   (`target="_blank" rel="noopener"`).
 
-### 2. Remplacer l'image Open Graph
+### 2. Image de partage, SEO & analytics
 
-`public/og-image.svg` est un **placeholder** vectoriel. Beaucoup de plateformes
-sociales n'affichent pas les OG en SVG : générer une **image PNG/JPG 1200×630**
-et mettre à jour le chemin dans `BaseLayout.astro` avant une campagne de partage.
+- **Open Graph** : `public/og-image.png` (1200×630) est en place, généré au
+  branding actuel. À régénérer si le branding change.
+- **SEO** : `sitemap-index.xml` (build), `robots.txt`, et JSON-LD `Organization`
+  dans le `<head>`. Pensez à mettre `site` (dans `astro.config.mjs`) et le
+  domaine du `robots.txt` à jour avec le domaine définitif.
+- **Analytics** : Plausible câblé mais **désactivé** tant que
+  `plausibleDomain` (dans `src/config.ts`) est vide — voir le README.
+- **Accès anticipé** : la page `/acces-anticipe` collecte e-mail + outils
+  souhaités. Repli `mailto:` par défaut ; brancher Formspree via `config.ts`
+  pour une vraie collecte.
 
 ### 3. Préparer un compte unique « EBOK ID »
 

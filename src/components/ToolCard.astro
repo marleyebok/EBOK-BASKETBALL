@@ -1,35 +1,47 @@
 ---
 /**
- * Une carte d'outil : logo, statut discret (coin haut-droit), et description
- * révélée au survol (desktop) ou au clic sur « Détails » (mobile).
- * La carte entière n'est pas un lien : c'est le lien « Voir l'outil » de la
- * description qui mène au site externe (permet l'ouverture en place sur mobile).
+ * Une carte d'outil : logo, statut (pastille LED néon), description visible,
+ * et un appel à l'action. Le fond et la bordure sont teintés à la couleur de
+ * l'outil. La carte entière est un lien si l'outil a une vraie URL.
  */
 import { STATUSES, type Tool } from '../data/tools';
 import ToolLogo from './ToolLogo.astro';
 
 interface Props {
   tool: Tool;
+  /** Index pour l'animation d'apparition décalée. */
+  index?: number;
 }
-const { tool } = Astro.props;
+const { tool, index = 0 } = Astro.props;
 const status = STATUSES[tool.status];
-const revId = `rev-${tool.id}`;
+const hasLink = Boolean(tool.url && tool.url !== '#');
+const Tag = hasLink ? 'a' : 'div';
+
+// Appel à l'action selon le statut (indépendant de la présence d'URL).
+const ctaLabel =
+  tool.status === 'on'
+    ? "Voir l'outil"
+    : tool.status === 'dev'
+      ? 'En cours de construction'
+      : 'Bientôt disponible';
+const ctaOnline = tool.status === 'on';
 ---
 
-<article class="c2">
-  <button class="c2-head" type="button" aria-expanded="false" aria-controls={revId}>
-    <span class={`scorner ${tool.status}`}><span class="d"></span>{status.label}</span>
+<Tag
+  class="card"
+  style={`--c:${tool.color}; --i:${index}`}
+  {...hasLink ? { href: tool.url } : {}}
+  aria-label={`EBOK ${tool.name} — ${status.label}`}
+>
+  <div class="card-head">
     <ToolLogo name={tool.name} color={tool.color} />
-    <span class="cue" aria-hidden="true">
-      <span class="cue-txt">Détails</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
-    </span>
-  </button>
-  <div class="rev" id={revId}>
-    <p>{tool.description}</p>
-    <a class="ext" href={tool.url}>
-      Voir l'outil
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"></path></svg>
-    </a>
+    <span class={`status st-${tool.status}`}><span class="led"></span>{status.label}</span>
   </div>
-</article>
+  <p class="card-desc">{tool.description}</p>
+  <span class:list={['card-cta', { soon: !ctaOnline }]}>
+    {ctaLabel}
+    {ctaOnline && (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+    )}
+  </span>
+</Tag>

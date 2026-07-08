@@ -17,11 +17,6 @@
   --accent-ink: #1157c4;
   --accent-soft: #eef4fe;
 
-  /* Statuts */
-  --on: #16a06d;
-  --dev: #d5851b;
-  --off: #7c8aa0;
-
   --shadow: 0 1px 2px rgba(14, 28, 41, 0.04), 0 12px 32px -16px rgba(14, 28, 41, 0.2);
 
   /* Typographie */
@@ -78,9 +73,6 @@ svg {
 }
 
 /* ---------- Logo « EBOK <NOM> » (marque + outils) --------------------- */
-/* Forme : coins arrondis en haut-gauche + bas-droite, angles droits en
-   bas-gauche + haut-droite ; séparation EBOK/nom droite en haut, arrondie
-   en bas. Même rayon (--r) partout. 100 % CSS. */
 .tlogo {
   display: inline-flex;
   align-items: stretch;
@@ -125,7 +117,7 @@ svg {
 /* ---------- Hero ------------------------------------------------------ */
 .hero {
   text-align: center;
-  padding: 26px 0 clamp(28px, 5vw, 52px);
+  padding: 26px 0 clamp(28px, 5vw, 48px);
 }
 .eyebrow {
   display: inline-flex;
@@ -167,211 +159,163 @@ svg {
   font-size: clamp(15px, 2vw, 18px);
 }
 
-/* ---------- Lien externe « Voir l'outil » ----------------------------- */
-.ext {
+/* Ligne de synthèse (compteurs par statut) */
+.tally {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin-top: 22px;
+  font-size: 13.5px;
+}
+.tally .count {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Actions du hero */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.btn-ghost {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  color: var(--accent);
+  gap: 8px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  padding: 11px 18px;
+  border-radius: 10px;
+  transition: border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
-.ext svg {
-  width: 14px;
-  height: 14px;
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ---------- Statuts : pastilles « LED » néon --------------------------- */
+.status {
+  --led: #ff4d5e;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.status.st-on {
+  --led: #10d98a;
+  color: #0a8f5c;
+}
+.status.st-dev {
+  --led: #ffa52b;
+  color: #b5710f;
+}
+.status.st-off {
+  --led: #ff4d5e;
+  color: #e0413f;
+}
+.led {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  background: radial-gradient(circle at 34% 32%, rgba(255, 255, 255, 0.9), transparent 42%), var(--led);
+  box-shadow: 0 0 4px 1px var(--led), 0 0 9px 2px color-mix(in srgb, var(--led) 55%, transparent);
+}
+.st-on .led {
+  animation: ledpulse 2.2s ease-in-out infinite;
+}
+@keyframes ledpulse {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px var(--led), 0 0 9px 2px color-mix(in srgb, var(--led) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 6px 2px var(--led), 0 0 15px 4px color-mix(in srgb, var(--led) 65%, transparent);
+  }
 }
 
 /* ---------- Grille de cartes ------------------------------------------ */
-.grid2 {
+.grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
-.c2 {
-  position: relative;
-  overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  min-height: 176px;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-.c2:hover,
-.c2.open,
-.c2:focus-within {
-  transform: translateY(-4px);
-  border-color: var(--border-strong);
-}
-.c2-head {
-  all: unset;
-  box-sizing: border-box;
+.card {
   display: flex;
-  align-items: flex-start;
-  width: 100%;
-  min-height: 176px;
-  padding: 42px 24px 24px;
-  cursor: pointer;
-  position: relative;
-}
-.c2-head:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -3px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 22px 20px;
+  min-height: 172px;
+  background: color-mix(in srgb, var(--c) 6%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--c) 22%, var(--border));
   border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  animation: fadeup 0.5s ease both;
+  animation-delay: calc(var(--i, 0) * 55ms);
 }
-.c2 .tlogo {
-  font-size: 19px;
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-4px);
+  background: color-mix(in srgb, var(--c) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--c) 42%, var(--border));
+  box-shadow: 0 1px 2px rgba(14, 28, 41, 0.05),
+    0 16px 34px -16px color-mix(in srgb, var(--c) 60%, rgba(14, 28, 41, 0.3));
 }
-
-/* Statut discret, coin supérieur droit */
-.scorner {
-  position: absolute;
-  top: 15px;
-  right: 16px;
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card .tlogo {
+  font-size: 18px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14.5px;
+  flex: 1;
+}
+.card-cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.scorner .d {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-}
-.scorner.on {
-  color: var(--on);
-}
-.scorner.on .d {
-  background: var(--on);
-  animation: beat 2.4s infinite;
-}
-.scorner.dev {
-  color: var(--dev);
-}
-.scorner.dev .d {
-  background: var(--dev);
-}
-.scorner.off {
-  color: var(--off);
-}
-.scorner.off .d {
-  background: var(--off);
-}
-@keyframes beat {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--on) 55%, transparent);
-  }
-  70% {
-    box-shadow: 0 0 0 5px transparent;
-  }
-  100% {
-    box-shadow: 0 0 0 0 transparent;
-  }
-}
-
-/* Indice cliquable (chevron) — incite à ouvrir la description */
-.cue {
-  position: absolute;
-  bottom: 14px;
-  right: 15px;
-  height: 26px;
-  min-width: 26px;
-  padding: 0;
-  border-radius: 999px;
-  border: 1px solid var(--border-strong);
-  background: var(--surface);
-  color: var(--muted);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-.cue svg {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.25s ease;
-}
-.cue-txt {
-  display: none;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 10.5px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.c2:hover .cue,
-.c2.open .cue {
-  background: var(--accent-soft);
-  color: var(--accent);
-  border-color: transparent;
-}
-.c2:hover .cue svg,
-.c2.open .cue svg {
-  transform: rotate(180deg);
-}
-
-/* Description : panneau qui glisse (desktop) */
-.rev {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--surface-2);
-  border-top: 1px solid var(--border);
-  padding: 16px 24px 18px;
-  transform: translateY(102%);
-  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.c2:hover .rev,
-.c2.open .rev,
-.c2:focus-within .rev {
-  transform: translateY(0);
-}
-.rev p {
-  margin: 0 0 9px;
-  color: var(--muted);
-  font-size: 14px;
-}
-.rev .ext {
   font-size: 13px;
+  color: color-mix(in srgb, var(--c) 82%, #05121c);
+}
+.card-cta svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.16s ease;
+}
+.card:hover .card-cta svg {
+  transform: translateX(4px);
+}
+.card-cta.soon {
+  color: var(--faint);
+  font-weight: 600;
 }
 
-/* Mobile : pas de survol -> ouverture au clic (accordéon), indice « Détails » */
-@media (max-width: 640px) {
-  .c2 {
-    min-height: auto;
+@keyframes fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
-  .c2-head {
-    min-height: auto;
-    padding: 22px 22px 20px;
-    align-items: center;
-  }
-  .rev {
-    position: static;
+  to {
+    opacity: 1;
     transform: none;
-    display: none;
-    padding: 0 22px 20px;
-    background: transparent;
-    border-top: 0;
-  }
-  .c2.open .rev {
-    display: block;
-  }
-  .cue {
-    position: static;
-    margin-left: auto;
-    min-width: auto;
-    padding: 0 11px;
-    height: 28px;
-    gap: 6px;
-    flex: none;
-  }
-  .cue-txt {
-    display: inline;
   }
 }
 
@@ -420,6 +364,107 @@ svg {
   padding: 22px 0 30px;
   color: var(--faint);
   font-size: 13px;
+  text-align: center;
+}
+.site-footer a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------- Formulaire (page accès anticipé) -------------------------- */
+.form-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-block: clamp(24px, 5vw, 48px);
+}
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: var(--shadow);
+}
+.form-card h1 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(26px, 4vw, 38px);
+  margin: 12px 0 0;
+  text-wrap: balance;
+}
+.form-card .lede {
+  color: var(--muted);
+  margin: 12px 0 26px;
+}
+.field {
+  display: block;
+  margin-bottom: 22px;
+}
+.field > .label {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.field input[type='email'] {
+  width: 100%;
+  font: inherit;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.field input[type='email']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+.tool-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.pick {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--c) 24%, var(--border));
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--c) 5%, var(--surface));
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.pick:hover {
+  border-color: color-mix(in srgb, var(--c) 55%, var(--border));
+}
+.pick input {
+  accent-color: var(--c);
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.pick .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--c);
+  flex: none;
+}
+.form-submit {
+  width: 100%;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+.form-note {
+  color: var(--faint);
+  font-size: 12.5px;
+  margin-top: 14px;
   text-align: center;
 }
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ebok-basketball.vercel.app/sitemap-index.xml
