@@ -1,33 +1,16 @@
 ---
-/** Hero : surtitre, titre, sous-titre, ligne de synthèse, accès anticipé. */
-import { TOOLS } from '../data/tools';
+/** Hero : surtitre, titre, sous-titre, accès anticipé. */
 import { currentLang, useT, localizedPath } from '../i18n';
 
 const lang = currentLang(Astro.currentLocale);
 const t = useT(lang);
 const eaHref = localizedPath('/acces-anticipe', lang);
-
-const count = (s: string) => TOOLS.filter((tool) => tool.status === s).length;
-const tally = [
-  { key: 'on', n: count('on'), label: t('tally.on') },
-  { key: 'dev', n: count('dev'), label: t('tally.dev') },
-  { key: 'off', n: count('off'), label: t('tally.off') },
-];
 ---
 
 <section class="hero wrap" aria-labelledby="hero-title">
   <span class="eyebrow"><span class="dot"></span> {t('hero.eyebrow')}</span>
   <h1 id="hero-title">{t('hero.titlePre')}<em>{t('hero.titleEm')}</em></h1>
   <p class="lede">{t('hero.lede')}</p>
-
-  <div class="tally" aria-label={t('tally.aria')}>
-    {tally.map((item) => (
-      <span class={`status st-${item.key}`}>
-        <span class="led"></span>
-        <span class="count">{item.n}</span>&nbsp;{item.label}
-      </span>
-    ))}
-  </div>
 
   <div class="hero-actions">
     <a class="btn-ghost" href={eaHref}>

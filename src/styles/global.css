@@ -194,20 +194,6 @@ svg {
   font-size: clamp(15px, 2vw, 18px);
 }
 
-/* Ligne de synthèse (compteurs par statut) */
-.tally {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px 26px;
-  margin-top: 22px;
-  font-size: 13.5px;
-}
-.tally .count {
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-}
-
 /* Actions du hero */
 .hero-actions {
   display: flex;
