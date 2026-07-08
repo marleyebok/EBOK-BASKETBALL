@@ -1,0 +1,87 @@
+---
+/** Contenu de la page « accès anticipé » (formulaire), localisé. */
+import { TOOLS } from '../data/tools';
+import { siteConfig } from '../config';
+import { currentLang, useT } from '../i18n';
+
+const t = useT(currentLang(Astro.currentLocale));
+---
+
+<main class="wrap form-page">
+  <div class="form-card">
+    <span class="eyebrow"><span class="dot"></span> {t('ea.eyebrow')}</span>
+    <h1>{t('ea.title')}</h1>
+    <p class="lede">{t('ea.lede')}</p>
+
+    <form
+      id="ea-form"
+      data-endpoint={siteConfig.formspreeEndpoint}
+      data-email={siteConfig.contactEmail}
+      data-subject={t('ea.subject')}
+      data-lemail={t('ea.mailEmail')}
+      data-ltools={t('ea.mailTools')}
+      novalidate
+    >
+      <label class="field">
+        <span class="label">{t('ea.emailLabel')}</span>
+        <input type="email" name="email" required autocomplete="email" placeholder={t('ea.emailPlaceholder')} />
+      </label>
+
+      <div class="field">
+        <span class="label">{t('ea.toolsLabel')}</span>
+        <div class="tool-picker">
+          {TOOLS.map((tool) => (
+            <label class="pick" style={`--c:${tool.color}`}>
+              <input type="checkbox" name="tools" value={`EBOK ${tool.name}`} />
+              <span class="swatch"></span>
+              {tool.name}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <input type="hidden" name="_subject" value={t('ea.subject')} />
+      <button type="submit" class="contact-btn form-submit">{t('ea.submit')}</button>
+      <p class="form-note">{t('ea.note')}</p>
+    </form>
+
+    <div id="ea-thanks" hidden style="text-align:center;padding:12px 0">
+      <h1>{t('ea.thanksTitle')}</h1>
+      <p class="lede">{t('ea.thanksText')}</p>
+      <a class="btn-ghost" href={currentLang(Astro.currentLocale) === 'en' ? '/en/' : '/'}>{t('ea.back')}</a>
+    </div>
+  </div>
+</main>
+
+<script>
+  const form = document.getElementById('ea-form') as HTMLFormElement | null;
+  const thanks = document.getElementById('ea-thanks');
+  if (form && thanks) {
+    const d = form.dataset;
+    const showThanks = () => {
+      form.hidden = true;
+      thanks.hidden = false;
+      thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    const mailto = (email: string, tools: string[]) => {
+      const body = `${d.lemail}: ${email}\n${d.ltools}: ${tools.length ? tools.join(', ') : '—'}`;
+      return `mailto:${d.email}?subject=${encodeURIComponent(d.subject || '')}&body=${encodeURIComponent(body)}`;
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+      const tools = [...form.querySelectorAll<HTMLInputElement>('input[name="tools"]:checked')].map((i) => i.value);
+      if (d.endpoint) {
+        try {
+          const res = await fetch(d.endpoint, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+          if (res.ok) return showThanks();
+        } catch (_) {
+          /* repli mailto ci-dessous */
+        }
+      }
+      window.location.href = mailto(email, tools);
+      showThanks();
+    });
+  }
+</script>

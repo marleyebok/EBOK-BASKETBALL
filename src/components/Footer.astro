@@ -1,7 +1,7 @@
 ---
 /** Footer : mention légale. */
+import { currentLang, useT } from '../i18n';
+const t = useT(currentLang(Astro.currentLocale));
 ---
 
-<footer class="site-footer">
-  EBOK Basketball — la boîte à outils des basketteurs · © 2026
-</footer>
+<footer class="site-footer">{t('footer')}</footer>

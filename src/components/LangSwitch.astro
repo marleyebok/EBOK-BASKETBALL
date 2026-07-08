@@ -1,0 +1,19 @@
+---
+/** Sélecteur de langue FR / EN (même page, autre langue). */
+import { currentLang, localizedPath, locales, localeNames } from '../i18n';
+const lang = currentLang(Astro.currentLocale);
+const path = Astro.url.pathname;
+---
+
+<nav class="lang-switch" aria-label="Langue / Language">
+  {locales.map((l) => (
+    <a
+      href={localizedPath(path, l)}
+      class:list={['lang', { active: l === lang }]}
+      hreflang={l}
+      aria-current={l === lang ? 'true' : undefined}
+    >
+      {localeNames[l]}
+    </a>
+  ))}
+</nav>

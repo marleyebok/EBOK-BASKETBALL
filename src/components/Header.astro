@@ -1,10 +1,17 @@
 ---
-/** Header : uniquement le logo, centré. */
+/** Header : logo centré + sélecteur de langue à droite. */
 import Logo from './Logo.astro';
+import LangSwitch from './LangSwitch.astro';
+import { currentLang, useT, localizedPath } from '../i18n';
+
+const lang = currentLang(Astro.currentLocale);
+const t = useT(lang);
+const homeHref = localizedPath('/', lang);
 ---
 
 <header class="site-header">
-  <a href="/" aria-label="EBOK Basketball — accueil">
+  <a href={homeHref} aria-label={t('nav.home')}>
     <Logo />
   </a>
+  <LangSwitch />
 </header>

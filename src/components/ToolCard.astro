@@ -1,10 +1,11 @@
 ---
 /**
  * Une carte d'outil : logo, statut (pastille LED néon), description visible,
- * et un appel à l'action. Le fond et la bordure sont teintés à la couleur de
- * l'outil. La carte entière est un lien si l'outil a une vraie URL.
+ * et un appel à l'action. Fond/bordure teintés à la couleur de l'outil.
+ * Textes localisés via `Astro.currentLocale`.
  */
-import { STATUSES, type Tool } from '../data/tools';
+import type { Tool } from '../data/tools';
+import { currentLang, useT } from '../i18n';
 import ToolLogo from './ToolLogo.astro';
 
 interface Props {
@@ -13,31 +14,29 @@ interface Props {
   index?: number;
 }
 const { tool, index = 0 } = Astro.props;
-const status = STATUSES[tool.status];
+
+const lang = currentLang(Astro.currentLocale);
+const t = useT(lang);
+
+const statusLabel = t(`status.${tool.status}` as 'status.on');
+const ctaLabel = t(`cta.${tool.status}` as 'cta.on');
+const ctaOnline = tool.status === 'on';
+
 const hasLink = Boolean(tool.url && tool.url !== '#');
 const Tag = hasLink ? 'a' : 'div';
-
-// Appel à l'action selon le statut (indépendant de la présence d'URL).
-const ctaLabel =
-  tool.status === 'on'
-    ? "Voir l'outil"
-    : tool.status === 'dev'
-      ? 'En cours de construction'
-      : 'Bientôt disponible';
-const ctaOnline = tool.status === 'on';
 ---
 
 <Tag
   class="card"
   style={`--c:${tool.color}; --i:${index}`}
   {...hasLink ? { href: tool.url } : {}}
-  aria-label={`EBOK ${tool.name} — ${status.label}`}
+  aria-label={`EBOK ${tool.name} — ${statusLabel}`}
 >
   <div class="card-head">
     <ToolLogo name={tool.name} color={tool.color} />
-    <span class={`status st-${tool.status}`}><span class="led"></span>{status.label}</span>
+    <span class={`status st-${tool.status}`}><span class="led"></span>{statusLabel}</span>
   </div>
-  <p class="card-desc">{tool.description}</p>
+  <p class="card-desc">{tool.description[lang]}</p>
   <span class:list={['card-cta', { soon: !ctaOnline }]}>
     {ctaLabel}
     {ctaOnline && (

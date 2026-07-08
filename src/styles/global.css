@@ -109,9 +109,44 @@ svg {
 
 /* ---------- Header ---------------------------------------------------- */
 .site-header {
-  padding: 30px 0 6px;
+  position: relative;
+  padding: 30px 24px 6px;
   display: flex;
+  align-items: center;
   justify-content: center;
+}
+.lang-switch {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 3px;
+}
+.lang-switch .lang {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 999px;
+  line-height: 1;
+}
+.lang-switch .lang.active {
+  background: var(--ink);
+  color: #fff;
+}
+.lang-switch .lang:hover:not(.active) {
+  color: var(--ink);
+}
+@media (max-width: 480px) {
+  .lang-switch {
+    right: 14px;
+  }
 }
 
 /* ---------- Hero ------------------------------------------------------ */

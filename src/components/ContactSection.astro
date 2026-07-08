@@ -1,17 +1,17 @@
 ---
 /** Section contact (bas de page) : un seul bouton « Nous contacter ». */
-const email = 'Ebok.basket@gmail.com';
+import { currentLang, useT } from '../i18n';
+import { siteConfig } from '../config';
+
+const t = useT(currentLang(Astro.currentLocale));
 ---
 
 <section class="contact wrap" aria-labelledby="contact-title">
-  <span class="eyebrow"><span class="dot"></span> Un besoin · Une idée · Un outil</span>
-  <h2 id="contact-title">Construisons la suite ensemble</h2>
-  <p>
-    Acteurs et passionnés du basket français : toute demande de collaboration
-    est la bienvenue.
-  </p>
-  <a class="contact-btn" href={`mailto:${email}`}>
+  <span class="eyebrow"><span class="dot"></span> {t('contact.eyebrow')}</span>
+  <h2 id="contact-title">{t('contact.title')}</h2>
+  <p>{t('contact.text')}</p>
+  <a class="contact-btn" href={`mailto:${siteConfig.contactEmail}`}>
     <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
-    Nous contacter
+    {t('contact.btn')}
   </a>
 </section>

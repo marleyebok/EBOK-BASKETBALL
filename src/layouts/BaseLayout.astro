@@ -1,32 +1,36 @@
 ---
 /**
- * Layout de base : <head> (SEO / Open Graph / JSON-LD), polices self-hostées,
- * styles globaux, analytics optionnel. Toutes les pages passent par ici.
+ * Layout de base : <head> (SEO / Open Graph / JSON-LD / hreflang), polices
+ * self-hostées, styles globaux, analytics optionnel. Toutes les pages passent
+ * par ici. Bilingue via `Astro.currentLocale`.
  */
-
-// Polices self-hostées (perf + pas de dépendance à Google Fonts au runtime).
-import '@fontsource/anton'; // titres & logo (poids 400 unique)
-import '@fontsource-variable/inter'; // corps de texte (variable)
-
+import '@fontsource/anton';
+import '@fontsource-variable/inter';
 import '../styles/global.css';
+
 import { siteConfig } from '../config';
+import { currentLang, useT, localizedPath, ogLocale, locales } from '../i18n';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const {
-  title = 'EBOK Basketball — la boîte à outils des basketteurs',
-  description = 'Neuf outils pour les coachs, joueurs et clubs de basket francophones — du terrain à l\'analyse. L\'écosystème EBOK Basketball.',
-} = Astro.props;
+const lang = currentLang(Astro.currentLocale);
+const t = useT(lang);
 
-// URL canonique / OG absolue (repose sur `site` dans astro.config.mjs).
+const { title = t('meta.title'), description = t('meta.desc') } = Astro.props;
+
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og-image.png', Astro.site).href;
 const siteUrl = new URL('/', Astro.site).href;
 
-// Données structurées (SEO) : aide les moteurs à comprendre le site.
+// Liens alternates (hreflang) vers la même page dans chaque langue.
+const alternates = locales.map((l) => ({
+  lang: l,
+  href: new URL(localizedPath(Astro.url.pathname, l), Astro.site).href,
+}));
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -39,7 +43,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -52,6 +56,11 @@ const jsonLd = {
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    {alternates.map((a) => (
+      <link rel="alternate" hreflang={a.lang} href={a.href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="EBOK Basketball" />
@@ -61,7 +70,7 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content={ogLocale[lang]} />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -69,10 +78,8 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <!-- Données structurées -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    <!-- Analytics respectueux de la vie privée (activé si un domaine est configuré) -->
     {siteConfig.plausibleDomain && (
       <script
         defer

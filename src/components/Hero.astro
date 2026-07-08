@@ -1,37 +1,38 @@
 ---
 /** Hero : surtitre, titre, sous-titre, ligne de synthèse, accès anticipé. */
 import { TOOLS } from '../data/tools';
+import { currentLang, useT, localizedPath } from '../i18n';
 
-// Compteurs par statut pour la ligne de synthèse.
-const count = (s: string) => TOOLS.filter((t) => t.status === s).length;
+const lang = currentLang(Astro.currentLocale);
+const t = useT(lang);
+const eaHref = localizedPath('/acces-anticipe', lang);
+
+const count = (s: string) => TOOLS.filter((tool) => tool.status === s).length;
 const tally = [
-  { key: 'on', n: count('on'), label: 'en ligne' },
-  { key: 'dev', n: count('dev'), label: 'en développement' },
-  { key: 'off', n: count('off'), label: 'à venir' },
+  { key: 'on', n: count('on'), label: t('tally.on') },
+  { key: 'dev', n: count('dev'), label: t('tally.dev') },
+  { key: 'off', n: count('off'), label: t('tally.off') },
 ];
 ---
 
 <section class="hero wrap" aria-labelledby="hero-title">
-  <span class="eyebrow"><span class="dot"></span> L'écosystème du basket français</span>
-  <h1 id="hero-title">La boîte à outils des <em>basketteurs</em></h1>
-  <p class="lede">
-    Neuf outils pour les coachs, joueurs et clubs francophones — du terrain à
-    l'analyse. Chaque outil ouvre son propre site.
-  </p>
+  <span class="eyebrow"><span class="dot"></span> {t('hero.eyebrow')}</span>
+  <h1 id="hero-title">{t('hero.titlePre')}<em>{t('hero.titleEm')}</em></h1>
+  <p class="lede">{t('hero.lede')}</p>
 
-  <div class="tally" aria-label="État de l'écosystème">
-    {tally.map((t) => (
-      <span class={`status st-${t.key}`}>
+  <div class="tally" aria-label={t('tally.aria')}>
+    {tally.map((item) => (
+      <span class={`status st-${item.key}`}>
         <span class="led"></span>
-        <span class="count">{t.n}</span>&nbsp;{t.label}
+        <span class="count">{item.n}</span>&nbsp;{item.label}
       </span>
     ))}
   </div>
 
   <div class="hero-actions">
-    <a class="btn-ghost" href="/acces-anticipe">
+    <a class="btn-ghost" href={eaHref}>
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-      Demander un accès anticipé
+      {t('hero.cta')}
     </a>
   </div>
 </section>

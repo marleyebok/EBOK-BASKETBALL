@@ -26,8 +26,8 @@ export interface Tool {
   color: string;
   /** Statut courant. */
   status: StatusKey;
-  /** Description brève (révélée au survol / clic). */
-  description: string;
+  /** Description brève, bilingue (fr / en). */
+  description: { fr: string; en: string };
   /**
    * URL du sous-site de l'outil.
    * '#' tant que le sous-domaine n'existe pas — voir NOTES.md.
@@ -52,7 +52,10 @@ export const TOOLS: Tool[] = [
     name: 'VIDEO',
     color: '#1FA98C',
     status: 'on',
-    description: "L'échange de liens vidéo pensé pour les équipes amateurs.",
+    description: {
+      fr: "L'échange de liens vidéo pensé pour les équipes amateurs.",
+      en: 'Video-link sharing built for amateur teams.',
+    },
     url: '#',
   },
   {
@@ -60,7 +63,10 @@ export const TOOLS: Tool[] = [
     name: 'PLAYBOOK',
     color: '#E08A2B',
     status: 'dev',
-    description: 'La vidéothèque des meilleurs systèmes de jeu, une base tactique pour les coachs.',
+    description: {
+      fr: 'La vidéothèque des meilleurs systèmes de jeu, une base tactique pour les coachs.',
+      en: 'A video library of the best plays — a tactical base for coaches.',
+    },
     url: '#',
   },
   {
@@ -68,7 +74,10 @@ export const TOOLS: Tool[] = [
     name: 'EVENT',
     color: '#E23A3A',
     status: 'dev',
-    description: "L'agenda collaboratif du basket français : tournois, camps et détections.",
+    description: {
+      fr: "L'agenda collaboratif du basket français : tournois, camps et détections.",
+      en: 'The collaborative calendar of French basketball: tournaments, camps and tryouts.',
+    },
     url: '#',
   },
   {
@@ -76,7 +85,10 @@ export const TOOLS: Tool[] = [
     name: 'STATS',
     color: '#2E6FD6',
     status: 'off',
-    description: "La saisie et l'analyse de statistiques, du live scoring au bilan de saison.",
+    description: {
+      fr: "La saisie et l'analyse de statistiques, du live scoring au bilan de saison.",
+      en: 'Stat tracking and analysis, from live scoring to season reviews.',
+    },
     url: '#',
   },
   {
@@ -84,7 +96,10 @@ export const TOOLS: Tool[] = [
     name: 'MERCATO',
     color: '#4CA62E',
     status: 'off',
-    description: 'La mise en relation entre clubs, joueurs et staffs — le marché amateur.',
+    description: {
+      fr: 'La mise en relation entre clubs, joueurs et staffs — le marché amateur.',
+      en: 'Connecting clubs, players and staff — the amateur transfer market.',
+    },
     url: '#',
   },
   {
@@ -92,7 +107,10 @@ export const TOOLS: Tool[] = [
     name: 'NOTEBOOK',
     color: '#7A86A0',
     status: 'off',
-    description: 'Rédigez, structurez et archivez toutes vos séances d’entraînement.',
+    description: {
+      fr: 'Rédigez, structurez et archivez toutes vos séances d’entraînement.',
+      en: 'Write, structure and archive all your training sessions.',
+    },
     url: '#',
   },
   {
@@ -100,7 +118,10 @@ export const TOOLS: Tool[] = [
     name: 'ACADÉMIE',
     color: '#8A4CE0',
     status: 'off',
-    description: 'La formation : contenus pédagogiques pour joueurs et entraîneurs.',
+    description: {
+      fr: 'La formation : contenus pédagogiques pour joueurs et entraîneurs.',
+      en: 'Training & education: learning content for players and coaches.',
+    },
     url: '#',
   },
   {
@@ -108,7 +129,10 @@ export const TOOLS: Tool[] = [
     name: 'SCOUTING',
     color: '#EA5A3C',
     status: 'off',
-    description: "Le scouting report complet pour analyser l'adversaire et préparer le match.",
+    description: {
+      fr: "Le scouting report complet pour analyser l'adversaire et préparer le match.",
+      en: 'The complete scouting report to analyze opponents and prepare for the game.',
+    },
     url: '#',
   },
   {
@@ -116,7 +140,10 @@ export const TOOLS: Tool[] = [
     name: 'BLOG',
     color: '#C8317E',
     status: 'off',
-    description: "L'actualité, les analyses et les coulisses de l'écosystème EBOK.",
+    description: {
+      fr: "L'actualité, les analyses et les coulisses de l'écosystème EBOK.",
+      en: 'News, analysis and behind-the-scenes of the EBOK ecosystem.',
+    },
     url: '#',
   },
 ];

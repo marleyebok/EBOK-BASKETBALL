@@ -64,10 +64,14 @@ src/
 │   └── Footer.astro
 ├── styles/
 │   └── global.css          # thème clair, logo, cartes, sections, formulaire
+├── i18n.ts                 # 🌍 textes FR/EN + helpers de langue
 ├── config.ts               # ⚙️ Formspree, e-mail, analytics (voir ci-dessous)
 └── pages/
-    ├── index.astro
-    └── acces-anticipe.astro # formulaire d'inscription au programme bêta
+    ├── index.astro          # accueil (FR, à la racine /)
+    ├── acces-anticipe.astro # formulaire bêta (FR)
+    └── en/
+        ├── index.astro          # accueil (EN, /en/)
+        └── acces-anticipe.astro # formulaire bêta (EN)
 public/
 ├── favicon.svg
 ├── og-image.png            # aperçu Open Graph (1200×630)
@@ -85,8 +89,15 @@ public/
 - **Analytics** (optionnel, sans cookies) : crée le site sur
   [Plausible](https://plausible.io) et renseigne `plausibleDomain` pour activer
   la mesure d'audience. Vide = désactivé.
-- **SEO** : `sitemap-index.xml` généré au build, `robots.txt` fourni, et données
-  structurées JSON-LD injectées dans le `<head>`.
+- **SEO** : `sitemap-index.xml` généré au build, `robots.txt` fourni, données
+  structurées JSON-LD et balises `hreflang` (FR/EN) dans le `<head>`.
+
+### Bilingue (FR / EN)
+
+- **FR** à la racine (`/`), **EN** sous `/en/`. Sélecteur de langue dans le header.
+- Tous les textes d'interface sont dans [`src/i18n.ts`](src/i18n.ts) ; les
+  descriptions des outils sont bilingues dans `tools.ts` (`description.fr` /
+  `description.en`). Pour ajouter une langue : étendre `locales` + `ui`.
 
 ---
 

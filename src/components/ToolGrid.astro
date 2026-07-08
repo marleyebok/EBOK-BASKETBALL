@@ -1,10 +1,13 @@
 ---
 /** Grille des 9 outils. */
 import { TOOLS } from '../data/tools';
+import { currentLang, useT } from '../i18n';
 import ToolCard from './ToolCard.astro';
+
+const t = useT(currentLang(Astro.currentLocale));
 ---
 
-<section class="wrap" aria-label="Les outils de l'écosystème EBOK Basketball">
+<section class="wrap" aria-label={t('tools.aria')}>
   <div class="grid">
     {TOOLS.map((tool, i) => <ToolCard tool={tool} index={i} />)}
   </div>

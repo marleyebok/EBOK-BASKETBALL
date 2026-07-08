@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import EarlyAccess from '../../components/EarlyAccess.astro';
+import { useT } from '../../i18n';
+
+const t = useT('en');
+---
+
+<BaseLayout title={t('ea.metaTitle')} description={t('ea.metaDesc')}>
+  <Header />
+  <EarlyAccess />
+  <Footer />
+</BaseLayout>
