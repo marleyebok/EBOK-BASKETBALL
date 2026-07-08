@@ -1,76 +1,50 @@
 /**
- * Source de vérité unique de la galaxie EBOK Basketball.
+ * Source de vérité unique de l'écosystème EBOK Basketball.
  *
  * Pour AJOUTER / MODIFIER / RETIRER un outil : édite uniquement ce fichier.
- * Aucune modification de HTML n'est nécessaire — les composants lisent ces
- * données pour dessiner les bulles, les pop-ups, les statuts et les orbites.
+ * Les composants lisent ces données pour dessiner les cartes, les logos,
+ * les statuts et les descriptions.
  *
- * Pour changer un statut : modifie le champ `status` ('on' | 'dev' | 'off').
- * Pour brancher le vrai sous-site : renseigne `url` (ex. https://video.ebok.fr).
+ * - Changer un statut : modifie `status` ('on' | 'dev' | 'off').
+ * - Brancher le vrai sous-site : renseigne `url` (ex. https://video.ebok.fr).
  */
 
-/** Les trois états possibles d'un outil de la galaxie. */
+/** Les trois états possibles d'un outil. */
 export type StatusKey = 'on' | 'dev' | 'off';
 
-/** Sur quel anneau d'orbite la bulle est posée. */
-export type Ring = 'inner' | 'middle' | 'outer';
-
 export interface Status {
-  /** Libellé affiché en toutes lettres dans la pop-up. */
+  /** Libellé affiché (statut discret + description). */
   label: string;
-  /** Couleur de la pastille et des ondes concentriques. */
-  color: string;
 }
 
 export interface Tool {
-  /** Identifiant technique stable (slug), utile pour les ancres / le futur routage. */
+  /** Identifiant technique stable (slug). */
   id: string;
-  /** Nom court affiché dans la bulle (le préfixe « EBOK » est ajouté par l'UI). */
+  /** Nom court affiché dans le logo (le préfixe « EBOK » est ajouté par l'UI). */
   name: string;
-  /** Couleur propre de l'outil (nom + barre de la pop-up). */
+  /** Couleur propre de l'outil (logo + accents). */
   color: string;
-  /** Statut courant de l'outil. */
+  /** Statut courant. */
   status: StatusKey;
-  /** Description brève montrée dans la pop-up (et sous la bulle sur mobile). */
+  /** Description brève (révélée au survol / clic). */
   description: string;
   /**
    * URL du sous-site de l'outil.
-   * '#' tant que le sous-domaine n'existe pas — voir NOTES.md pour le branchement.
+   * '#' tant que le sous-domaine n'existe pas — voir NOTES.md.
    */
   url: string;
-  /** Position angulaire sur l'orbite, en degrés, mesurée depuis le haut, sens horaire. */
-  angle: number;
-  /** Anneau d'orbite (rayon défini dans RINGS ci-dessous). */
-  ring: Ring;
 }
 
-/**
- * Définition des trois statuts.
- * Couleurs conformes à la charte : vert / orange / rouge.
- */
+/** Définition des trois statuts (libellés). Couleurs gérées en CSS. */
 export const STATUSES: Record<StatusKey, Status> = {
-  on: { label: 'En ligne', color: '#12c98a' },
-  dev: { label: 'En développement', color: '#f2a83b' },
-  off: { label: 'Bientôt', color: '#e0576a' },
+  on: { label: 'En ligne' },
+  dev: { label: 'En développement' },
+  off: { label: 'Bientôt' },
 };
 
 /**
- * Rayons des trois anneaux d'orbite, exprimés en fraction de la largeur du
- * champ orbital (l'UI les convertit en pourcentages). Modifiables librement.
- */
-export const RINGS: Record<Ring, number> = {
-  inner: 0.21,
-  middle: 0.34,
-  outer: 0.47,
-};
-
-/**
- * Les 9 outils de la galaxie.
- *
- * `layout` (angle + ring) est pensé pour éviter tout alignement radial :
- * les angles sont espacés de 40° et les anneaux alternent
- * (interne → externe → milieu → …). Les 3 outils actifs — Video, Playbook,
- * Event — occupent l'anneau interne, régulièrement répartis.
+ * Les 9 outils de l'écosystème.
+ * L'ordre du tableau = l'ordre d'affichage dans la grille.
  */
 export const TOOLS: Tool[] = [
   {
@@ -80,8 +54,22 @@ export const TOOLS: Tool[] = [
     status: 'on',
     description: "L'échange de liens vidéo pensé pour les équipes amateurs.",
     url: '#',
-    angle: 0,
-    ring: 'inner',
+  },
+  {
+    id: 'playbook',
+    name: 'PLAYBOOK',
+    color: '#E08A2B',
+    status: 'dev',
+    description: 'La vidéothèque des meilleurs systèmes de jeu, une base tactique pour les coachs.',
+    url: '#',
+  },
+  {
+    id: 'event',
+    name: 'EVENT',
+    color: '#E23A3A',
+    status: 'dev',
+    description: "L'agenda collaboratif du basket français : tournois, camps et détections.",
+    url: '#',
   },
   {
     id: 'stats',
@@ -90,77 +78,45 @@ export const TOOLS: Tool[] = [
     status: 'off',
     description: "La saisie et l'analyse de statistiques, du live scoring au bilan de saison.",
     url: '#',
-    angle: 40,
-    ring: 'outer',
-  },
-  {
-    id: 'notebook',
-    name: 'NOTEBOOK',
-    color: '#7a86a0',
-    status: 'off',
-    description: 'Rédigez, structurez et archivez toutes vos séances d’entraînement.',
-    url: '#',
-    angle: 80,
-    ring: 'middle',
-  },
-  {
-    id: 'playbook',
-    name: 'PLAYBOOK',
-    color: '#E08a2b',
-    status: 'dev',
-    description: 'La vidéothèque des meilleurs systèmes de jeu, une base tactique pour les coachs.',
-    url: '#',
-    angle: 120,
-    ring: 'inner',
-  },
-  {
-    id: 'academie',
-    name: 'ACADEMIE',
-    color: '#8A4CE0',
-    status: 'off',
-    description: 'La formation : contenus pédagogiques pour joueurs et entraîneurs.',
-    url: '#',
-    angle: 160,
-    ring: 'outer',
-  },
-  {
-    id: 'scouting',
-    name: 'SCOUTING',
-    color: '#EA5A3C',
-    status: 'off',
-    description: "Le scouting report complet pour analyser l'adversaire et préparer le plan de match.",
-    url: '#',
-    angle: 200,
-    ring: 'middle',
-  },
-  {
-    id: 'event',
-    name: 'EVENT',
-    color: '#E23A3A',
-    status: 'dev',
-    description: "L'agenda collaboratif du basket français : événements, tournois, camps et détections.",
-    url: '#',
-    angle: 240,
-    ring: 'inner',
   },
   {
     id: 'mercato',
     name: 'MERCATO',
     color: '#4CA62E',
     status: 'off',
-    description: 'La mise en relation entre clubs, joueurs et staffs, le marché des transferts amateur.',
+    description: 'La mise en relation entre clubs, joueurs et staffs — le marché amateur.',
     url: '#',
-    angle: 280,
-    ring: 'outer',
+  },
+  {
+    id: 'notebook',
+    name: 'NOTEBOOK',
+    color: '#7A86A0',
+    status: 'off',
+    description: 'Rédigez, structurez et archivez toutes vos séances d’entraînement.',
+    url: '#',
+  },
+  {
+    id: 'academie',
+    name: 'ACADÉMIE',
+    color: '#8A4CE0',
+    status: 'off',
+    description: 'La formation : contenus pédagogiques pour joueurs et entraîneurs.',
+    url: '#',
+  },
+  {
+    id: 'scouting',
+    name: 'SCOUTING',
+    color: '#EA5A3C',
+    status: 'off',
+    description: "Le scouting report complet pour analyser l'adversaire et préparer le match.",
+    url: '#',
   },
   {
     id: 'blog',
     name: 'BLOG',
     color: '#C8317E',
     status: 'off',
-    description: "L'actualité, les analyses et les coulisses de la galaxie EBOK Basketball.",
+    description: "L'actualité, les analyses et les coulisses de l'écosystème EBOK.",
     url: '#',
-    angle: 320,
-    ring: 'middle',
   },
 ];

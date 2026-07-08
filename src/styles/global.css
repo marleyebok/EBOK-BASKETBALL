@@ -1,225 +1,429 @@
 /* =========================================================================
    EBOK Basketball — styles globaux
-   Thème « polaire » : clair, futuriste, épuré.
-   Les styles du système solaire (ballon, orbites, bulles) sont scoped
-   dans le composant SolarSystem.astro.
+   Thème clair, épuré, « SaaS ». Single-theme assumé (pas de mode sombre).
    ========================================================================= */
 
-/* ----- Design tokens -------------------------------------------------- */
 :root {
-  /* Palette polaire */
-  --white: #ffffff;
-  --blue-neon: #5cc0ff;
-  --blue: #2f8fe0;
-  --blue-pale: #aeddff;
-  --silver: #d9e6f2;
-
-  /* Encre (texte) sur fond clair */
-  --ink: #10202e;
-  --ink-soft: #4a5b6b;
-
-  /* Fonds */
-  --bg-1: #ffffff;
-  --bg-2: #e9f3ff;
-  --grid-line: rgba(90, 160, 220, 0.10);
-  --halo: rgba(92, 192, 255, 0.30);
-
-  /* Plaque de lisibilité au centre du ballon */
-  --plate: rgba(9, 40, 74, 0.55);
+  /* Palette */
+  --bg: #fbfcfe;
+  --surface: #ffffff;
+  --surface-2: #f4f8fd;
+  --border: #e6edf5;
+  --border-strong: #d5e0ec;
+  --ink: #0e1c29;
+  --muted: #55677b;
+  --faint: #8a99ab;
+  --accent: #1f6fe5;
+  --accent-ink: #1157c4;
+  --accent-soft: #eef4fe;
 
   /* Statuts */
-  --status-on: #12c98a;
-  --status-dev: #f2a83b;
-  --status-off: #e0576a;
+  --on: #16a06d;
+  --dev: #d5851b;
+  --off: #7c8aa0;
+
+  --shadow: 0 1px 2px rgba(14, 28, 41, 0.04), 0 12px 32px -16px rgba(14, 28, 41, 0.2);
 
   /* Typographie */
-  --font-title: 'Anton', system-ui, sans-serif;
-  --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-display: 'Anton', 'Arial Narrow', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* Rythme */
-  --maxw: 1180px;
-  --radius: 16px;
+  /* Rayon des coins arrondis du logo (même valeur partout) */
+  --r: 0.7em;
+
+  --maxw: 1040px;
 }
 
-/* ----- Reset léger ---------------------------------------------------- */
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
 }
 
 html {
-  -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
-  font-family: var(--font-body);
   color: var(--ink);
+  font-family: var(--font-sans);
   line-height: 1.6;
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-  background-attachment: fixed;
-  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(60% 50% at 50% -8%, var(--accent-soft), transparent 70%),
+    var(--bg);
+  min-height: 100vh;
 }
 
-/* Grille technique + halos lumineux en fond, derrière le contenu */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(60% 45% at 18% 12%, var(--halo) 0%, transparent 60%),
-    radial-gradient(55% 45% at 85% 22%, rgba(174, 221, 255, 0.35) 0%, transparent 60%),
-    radial-gradient(50% 40% at 50% 100%, rgba(47, 143, 224, 0.18) 0%, transparent 60%),
-    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 46px 46px, 46px 46px;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 img,
 svg {
   max-width: 100%;
-  height: auto;
-  display: block;
 }
 
-a {
-  color: var(--blue);
-  text-decoration: none;
-}
-
-/* Focus clavier visible et accessible partout */
 :focus-visible {
-  outline: 3px solid var(--blue-neon);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
-/* ----- Structure de page --------------------------------------------- */
 .wrap {
   width: 100%;
   max-width: var(--maxw);
   margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  padding-inline: 24px;
 }
 
-main {
-  display: block;
+/* ---------- Logo « EBOK <NOM> » (marque + outils) --------------------- */
+/* Forme : coins arrondis en haut-gauche + bas-droite, angles droits en
+   bas-gauche + haut-droite ; séparation EBOK/nom droite en haut, arrondie
+   en bas. Même rayon (--r) partout. 100 % CSS. */
+.tlogo {
+  display: inline-flex;
+  align-items: stretch;
+  background: #fff;
+  border: 2.5px solid var(--c);
+  border-radius: var(--r) 0 var(--r) 0;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.tlogo .ebok {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c);
+  color: #fff;
+  padding: 0.42em 0.5em 0.34em 0.6em;
+  border-radius: 0 0 var(--r) 0;
+}
+.tlogo .nm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c);
+  padding: 0.42em 0.64em 0.34em 0.52em;
+}
+.tlogo.brand {
+  font-size: clamp(21px, 2.8vw, 29px);
+  border-width: 3px;
 }
 
-.section {
-  padding-block: clamp(2.5rem, 6vw, 5rem);
-}
-
-/* ----- Header --------------------------------------------------------- */
+/* ---------- Header ---------------------------------------------------- */
 .site-header {
-  padding-block: clamp(1.5rem, 4vw, 2.5rem);
+  padding: 30px 0 6px;
   display: flex;
   justify-content: center;
 }
 
-.site-header .logo {
-  width: min(78vw, 420px);
-  height: auto;
-}
-
-/* ----- Hero ----------------------------------------------------------- */
+/* ---------- Hero ------------------------------------------------------ */
 .hero {
   text-align: center;
-  padding-top: clamp(1rem, 3vw, 2rem);
+  padding: 26px 0 clamp(28px, 5vw, 52px);
 }
-
-.hero h1 {
-  font-family: var(--font-title);
-  font-weight: 400;
-  font-size: clamp(2.4rem, 7vw, 4.6rem);
-  line-height: 1.02;
-  letter-spacing: 0.5px;
-  margin: 0 auto;
-  max-width: 16ch;
-  color: var(--ink);
-  text-transform: uppercase;
-}
-
-/* Le mot « basketteurs » en dégradé bleu clair */
-.hero h1 .grad {
-  background: linear-gradient(120deg, var(--blue-pale) 0%, var(--blue-neon) 45%, var(--blue) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero p {
-  margin: clamp(1rem, 3vw, 1.6rem) auto 0;
-  max-width: 60ch;
-  font-size: clamp(1rem, 2.2vw, 1.2rem);
-  color: var(--ink-soft);
-}
-
-/* ----- Section contact ------------------------------------------------ */
-.contact {
-  text-align: center;
-}
-
-.contact .eyebrow {
-  font-family: var(--font-body);
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-size: 0.82rem;
-  color: var(--blue);
-  margin: 0 0 0.75rem;
-}
-
-.contact h2 {
-  font-family: var(--font-title);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(1.9rem, 5vw, 3rem);
-  margin: 0;
-  color: var(--ink);
-}
-
-.contact p {
-  margin: 1rem auto 2rem;
-  max-width: 52ch;
-  color: var(--ink-soft);
-}
-
-.btn {
+.eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 8px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 0.85rem 1.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 6px 13px;
   border-radius: 999px;
-  color: var(--white);
-  background: linear-gradient(120deg, var(--blue) 0%, var(--blue-neon) 100%);
-  box-shadow: 0 10px 24px -10px rgba(47, 143, 224, 0.7);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.hero h1 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 1.04;
+  font-size: clamp(32px, 5.4vw, 54px);
+  margin: 20px auto 0;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero .lede {
+  margin: 16px auto 0;
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: clamp(15px, 2vw, 18px);
 }
 
-.btn:hover,
-.btn:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 30px -12px rgba(47, 143, 224, 0.8);
+/* ---------- Lien externe « Voir l'outil » ----------------------------- */
+.ext {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+}
+.ext svg {
+  width: 14px;
+  height: 14px;
 }
 
-/* ----- Footer --------------------------------------------------------- */
-.site-footer {
+/* ---------- Grille de cartes ------------------------------------------ */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.c2 {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  min-height: 176px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.c2:hover,
+.c2.open,
+.c2:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+}
+.c2-head {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 176px;
+  padding: 42px 24px 24px;
+  cursor: pointer;
+  position: relative;
+}
+.c2-head:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+  border-radius: 16px;
+}
+.c2 .tlogo {
+  font-size: 19px;
+}
+
+/* Statut discret, coin supérieur droit */
+.scorner {
+  position: absolute;
+  top: 15px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.scorner .d {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.scorner.on {
+  color: var(--on);
+}
+.scorner.on .d {
+  background: var(--on);
+  animation: beat 2.4s infinite;
+}
+.scorner.dev {
+  color: var(--dev);
+}
+.scorner.dev .d {
+  background: var(--dev);
+}
+.scorner.off {
+  color: var(--off);
+}
+.scorner.off .d {
+  background: var(--off);
+}
+@keyframes beat {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--on) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 5px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Indice cliquable (chevron) — incite à ouvrir la description */
+.cue {
+  position: absolute;
+  bottom: 14px;
+  right: 15px;
+  height: 26px;
+  min-width: 26px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.cue svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s ease;
+}
+.cue-txt {
+  display: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.c2:hover .cue,
+.c2.open .cue {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: transparent;
+}
+.c2:hover .cue svg,
+.c2.open .cue svg {
+  transform: rotate(180deg);
+}
+
+/* Description : panneau qui glisse (desktop) */
+.rev {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+  padding: 16px 24px 18px;
+  transform: translateY(102%);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.c2:hover .rev,
+.c2.open .rev,
+.c2:focus-within .rev {
+  transform: translateY(0);
+}
+.rev p {
+  margin: 0 0 9px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.rev .ext {
+  font-size: 13px;
+}
+
+/* Mobile : pas de survol -> ouverture au clic (accordéon), indice « Détails » */
+@media (max-width: 640px) {
+  .c2 {
+    min-height: auto;
+  }
+  .c2-head {
+    min-height: auto;
+    padding: 22px 22px 20px;
+    align-items: center;
+  }
+  .rev {
+    position: static;
+    transform: none;
+    display: none;
+    padding: 0 22px 20px;
+    background: transparent;
+    border-top: 0;
+  }
+  .c2.open .rev {
+    display: block;
+  }
+  .cue {
+    position: static;
+    margin-left: auto;
+    min-width: auto;
+    padding: 0 11px;
+    height: 28px;
+    gap: 6px;
+    flex: none;
+  }
+  .cue-txt {
+    display: inline;
+  }
+}
+
+/* ---------- Section contact ------------------------------------------- */
+.contact {
+  padding: clamp(40px, 6vw, 72px) 0 8px;
   text-align: center;
-  padding-block: 2.5rem 3rem;
-  color: var(--ink-soft);
-  font-size: 0.9rem;
-  border-top: 1px solid rgba(90, 160, 220, 0.18);
-  margin-top: clamp(2rem, 5vw, 4rem);
+}
+.contact h2 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(22px, 3.4vw, 32px);
+  margin: 16px auto 0;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.contact p {
+  color: var(--muted);
+  max-width: 48ch;
+  margin: 14px auto 26px;
+}
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #fff;
+  background: var(--accent);
+  padding: 13px 24px;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px -10px var(--accent);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.contact-btn:hover,
+.contact-btn:focus-visible {
+  transform: translateY(-2px);
+  background: var(--accent-ink);
 }
 
-/* ----- Accessibilité : mouvement réduit ------------------------------- */
+/* ---------- Footer ---------------------------------------------------- */
+.site-footer {
+  margin-top: clamp(40px, 7vw, 72px);
+  border-top: 1px solid var(--border);
+  padding: 22px 0 30px;
+  color: var(--faint);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ---------- Mouvement réduit ------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -227,8 +431,7 @@ main {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    animation: none !important;
+    transition: none !important;
   }
 }

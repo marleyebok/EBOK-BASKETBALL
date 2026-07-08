@@ -1,0 +1,24 @@
+---
+/** Grille des 9 outils. */
+import { TOOLS } from '../data/tools';
+import ToolCard from './ToolCard.astro';
+---
+
+<section class="wrap" aria-label="Les outils de l'écosystème EBOK Basketball">
+  <div class="grid2">
+    {TOOLS.map((tool) => <ToolCard tool={tool} />)}
+  </div>
+</section>
+
+<script>
+  // Mobile : le survol n'existe pas -> un clic ouvre/ferme la description
+  // en place (sans changer de page). Sur desktop, le survol reste primaire.
+  document.querySelectorAll<HTMLButtonElement>('.c2-head').forEach((head) => {
+    head.addEventListener('click', () => {
+      const card = head.closest('.c2');
+      if (!card) return;
+      const open = card.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+</script>

@@ -1,0 +1,23 @@
+---
+/**
+ * Logo « EBOK <NOM> » décliné dans la couleur d'un outil.
+ * 100 % CSS (police Anton) — voir `.tlogo` dans global.css pour la forme.
+ * Pour la marque mère, passer name="BASKETBALL" et une couleur d'encre.
+ */
+interface Props {
+  name: string;
+  color: string;
+  /** Ajoute la classe `brand` (taille/épaisseur du logo principal). */
+  brand?: boolean;
+}
+const { name, color, brand = false } = Astro.props;
+---
+
+<span
+  class:list={['tlogo', { brand }]}
+  style={`--c:${color}`}
+  role="img"
+  aria-label={`EBOK ${name}`}
+>
+  <span class="ebok">EBOK</span><span class="nm">{name}</span>
+</span>

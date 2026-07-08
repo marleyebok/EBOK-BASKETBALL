@@ -1,0 +1,35 @@
+---
+/**
+ * Une carte d'outil : logo, statut discret (coin haut-droit), et description
+ * révélée au survol (desktop) ou au clic sur « Détails » (mobile).
+ * La carte entière n'est pas un lien : c'est le lien « Voir l'outil » de la
+ * description qui mène au site externe (permet l'ouverture en place sur mobile).
+ */
+import { STATUSES, type Tool } from '../data/tools';
+import ToolLogo from './ToolLogo.astro';
+
+interface Props {
+  tool: Tool;
+}
+const { tool } = Astro.props;
+const status = STATUSES[tool.status];
+const revId = `rev-${tool.id}`;
+---
+
+<article class="c2">
+  <button class="c2-head" type="button" aria-expanded="false" aria-controls={revId}>
+    <span class={`scorner ${tool.status}`}><span class="d"></span>{status.label}</span>
+    <ToolLogo name={tool.name} color={tool.color} />
+    <span class="cue" aria-hidden="true">
+      <span class="cue-txt">Détails</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+    </span>
+  </button>
+  <div class="rev" id={revId}>
+    <p>{tool.description}</p>
+    <a class="ext" href={tool.url}>
+      Voir l'outil
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"></path></svg>
+    </a>
+  </div>
+</article>

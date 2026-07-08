@@ -8,8 +8,8 @@ Le périmètre est une page unique statique, mais le projet est pensé pour
 **grandir** (une galaxie d'outils, de futurs sous-sites, un compte unique…).
 Astro apporte ce qu'un fichier unique ne permet pas proprement :
 
-- **Composants réutilisables** (`Header`, `Hero`, `SolarSystem`, `ToolBubble`,
-  `ContactSection`, `Footer`) — la demande explicite du cahier des charges.
+- **Composants réutilisables** (`Header`, `Hero`, `ToolGrid`, `ToolCard`,
+  `ToolLogo`, `ContactSection`, `Footer`).
 - **Données centralisées** en TypeScript (`src/data/tools.ts`) : ajouter,
   retirer ou modifier un outil = éditer un seul fichier, jamais du HTML.
 - **Zéro JavaScript expédié au navigateur** par défaut : Astro pré-rend tout en
@@ -19,23 +19,23 @@ Astro apporte ce qu'un fichier unique ne permet pas proprement :
 Si le site devait rester éternellement figé à une page sans évolution, du
 vanilla organisé aurait suffi. Ce n'est pas le pari ici.
 
-### Aucun JavaScript client
+### Presque aucun JavaScript client
 
-Toutes les interactions décrites (rotation du ballon, halo « respirant », ondes
-concentriques des statuts, ouverture des pop-ups au survol, bascule
-desktop → grille mobile) sont réalisées **uniquement en CSS**. Résultat : pas
-de JS bloquant, pas d'hydratation, un rendu instantané et accessible.
+La quasi-totalité des interactions (survol des cartes, glissé de la description,
+statut) est en **CSS pur**. Le seul script (`ToolGrid.astro`, quelques lignes)
+gère l'**ouverture au clic sur mobile** : le survol n'existant pas au tactile,
+un clic bascule une classe `.open` pour afficher la description en place. Rien
+de bloquant, pas d'hydratation lourde.
 
 ### Styles : CSS natif + variables
 
-Pas de framework CSS. Les **variables CSS** portent la charte (palette polaire,
-polices, statuts). Les styles globaux vivent dans `src/styles/global.css` ; le
-système solaire et les bulles portent leurs styles *scoped* dans leur composant.
+Pas de framework CSS. Les **variables CSS** portent la charte (palette claire,
+polices, statuts) dans `src/styles/global.css`. Le rayon des coins du logo est
+piloté par une seule variable `--r`.
 
-Le CSS des bulles est écrit **mobile-first** : par défaut une carte lisible
-(description visible, pas de survol requis sur tactile) ; le comportement
-« infobulle flottante sur orbite » est ajouté au-dessus de 720 px. Cela évite
-toute fuite de spécificité entre les deux dispositions.
+Le CSS des cartes prévoit les deux modes : **desktop** (description en infobulle
+qui glisse au survol) et **mobile** (< 640 px : description masquée puis ouverte
+au clic, indice « Détails » visible). Thème **clair uniquement**, choix assumé.
 
 ### Polices self-hostées
 
@@ -43,20 +43,25 @@ toute fuite de spécificité entre les deux dispositions.
 `@fontsource`, donc **self-hostées** : pas de dépendance à Google Fonts au
 runtime (meilleure perf, meilleure vie privée, build reproductible hors-ligne).
 
-### Le logo en SVG
+### Les logos en CSS (composant `ToolLogo`)
 
-Le fichier `EBOK_Basketball_Logo_transparent.png` n'ayant pas été fourni, le
-logo a été **recréé en SVG vectoriel** (`src/components/Logo.astro`) :
-transparent, net à toute taille, ultra-léger. Pour utiliser le vrai fichier de
-marque, dépose-le dans `public/` et remplace le `<svg>` par une balise `<img>`
-(instructions dans le composant).
+Chaque logo « EBOK <NOM> » est **rendu en CSS** (police Anton) à partir d'un nom
+et d'une couleur : deux blocs flex (bloc coloré « EBOK » + nom), avec une forme
+précise pilotée par `border-radius` (coins haut-gauche / bas-droite arrondis,
+bas-gauche / haut-droite droits ; séparation droite en haut, arrondie en bas).
+Avantages : net à toute taille, largeur auto-ajustée au texte, une seule source
+pour la marque et les 9 outils, aucune image à maintenir.
 
-### Le ballon de basket
+Un **export PNG HD à fond transparent** de chaque logo est fourni dans
+`public/logos/` pour les usages hors-site (réseaux sociaux, documents).
 
-Sphère blanche + coutures tracées en **SVG** (trait bleu néon, style « à main
-levée » via des courbes de Bézier asymétriques). La sphère et ses coutures
-tournent ensemble (20 s/tour) ; le texte central « EBOK / Basketball » est un
-calque **séparé et fixe**, avec plaque de lisibilité et ombres portées.
+### La grille de cartes
+
+Grille responsive (`repeat(auto-fill, minmax(300px, 1fr))`). Chaque carte porte
+le logo de l'outil, un **statut discret** (coin haut-droit, code couleur
+vert/orange/gris) et une description révélée par animation. La carte n'est pas
+un lien : c'est le lien « Voir l'outil » de la description qui mène au site
+externe — indispensable pour permettre l'ouverture au clic sur mobile.
 
 ### Version d'Astro
 
@@ -85,7 +90,7 @@ Recommandations quand les sous-sites arriveront :
 - Penser à renseigner **`site`** dans `astro.config.mjs` avec le domaine racine
   définitif (URL canoniques + Open Graph).
 - Si certains outils ouvrent dans un nouvel onglet, on pourra ajouter un champ
-  optionnel `external: true` aux données et l'exploiter dans `ToolBubble.astro`
+  optionnel `external: true` aux données et l'exploiter dans `ToolCard.astro`
   (`target="_blank" rel="noopener"`).
 
 ### 2. Remplacer l'image Open Graph
@@ -116,8 +121,7 @@ ce stade. Pour un identifiant unique partagé entre tous les outils plus tard :
 
 ### 4. Divers
 
-- Le placement des bulles (`angle` + `ring`) est paramétrable ; en cas d'ajout
-  au-delà de 9 outils, vérifier qu'aucune bulle ne chevauche une autre en
-  desktop (largeur des badges vs rayon d'orbite).
+- La grille s'adapte automatiquement au nombre d'outils (auto-fill) : ajouter
+  un outil ne demande qu'une entrée dans `tools.ts`.
 - Pour un multilingue éventuel, externaliser les libellés d'interface (hero,
   contact, footer) dans un fichier de données comme les outils.
