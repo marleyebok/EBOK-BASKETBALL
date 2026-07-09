@@ -56,7 +56,7 @@ export const TOOLS: Tool[] = [
       fr: "L'échange de liens vidéo pensé pour les équipes amateurs.",
       en: 'Video-link sharing built for amateur teams.',
     },
-    url: '#',
+    url: 'https://ebok-video.vercel.app/',
   },
   {
     id: 'playbook',
@@ -78,7 +78,7 @@ export const TOOLS: Tool[] = [
       fr: "L'agenda collaboratif du basket français : tournois, camps et détections.",
       en: 'The collaborative calendar of French basketball: tournaments, camps and tryouts.',
     },
-    url: '#',
+    url: 'https://ebok-event.vercel.app/',
   },
   {
     id: 'stats',

@@ -18,18 +18,22 @@ const { tool, index = 0 } = Astro.props;
 const lang = currentLang(Astro.currentLocale);
 const t = useT(lang);
 
-const statusLabel = t(`status.${tool.status}` as 'status.on');
-const ctaLabel = t(`cta.${tool.status}` as 'cta.on');
-const ctaOnline = tool.status === 'on';
-
 const hasLink = Boolean(tool.url && tool.url !== '#');
+const statusLabel = t(`status.${tool.status}` as 'status.on');
+// Si l'outil a une vraie URL, on invite à l'ouvrir ; sinon libellé selon le statut.
+const ctaLabel = hasLink ? t('cta.on') : t(`cta.${tool.status}` as 'cta.on');
+const ctaOnline = hasLink;
+
 const Tag = hasLink ? 'a' : 'div';
+const linkAttrs = hasLink
+  ? { href: tool.url, target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
 <Tag
   class="card"
   style={`--c:${tool.color}; --i:${index}`}
-  {...hasLink ? { href: tool.url } : {}}
+  {...linkAttrs}
   aria-label={`EBOK ${tool.name} — ${statusLabel}`}
 >
   <div class="card-head">
