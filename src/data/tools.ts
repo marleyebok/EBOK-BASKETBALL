@@ -73,7 +73,7 @@ export const TOOLS: Tool[] = [
     id: 'event',
     name: 'EVENT',
     color: '#E23A3A',
-    status: 'dev',
+    status: 'on',
     description: {
       fr: "L'agenda collaboratif du basket français : tournois, camps et détections.",
       en: 'The collaborative calendar of French basketball: tournaments, camps and tryouts.',
