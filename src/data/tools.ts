@@ -95,7 +95,7 @@ export const TOOLS: Tool[] = [
     id: 'mercato',
     name: 'MERCATO',
     color: '#4CA62E',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: 'La mise en relation entre clubs, joueurs et staffs — le marché amateur.',
       en: 'Connecting clubs, players and staff — the amateur transfer market.',
