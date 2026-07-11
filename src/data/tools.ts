@@ -84,7 +84,7 @@ export const TOOLS: Tool[] = [
     id: 'stats',
     name: 'STATS',
     color: '#2E6FD6',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: "La saisie et l'analyse de statistiques, du live scoring au bilan de saison.",
       en: 'Stat tracking and analysis, from live scoring to season reviews.',
