@@ -158,6 +158,17 @@ export const TOOLS: Tool[] = [
     url: '#',
   },
   {
+    id: 'workout',
+    name: 'WORKOUT',
+    color: '#A3BD18',
+    status: 'dev',
+    description: {
+      fr: 'La mise en relation entre joueurs, coachs individuels et préparateurs physiques.',
+      en: 'Connecting players with individual coaches and physical trainers.',
+    },
+    url: 'https://ebok-workout.vercel.app/',
+  },
+  {
     id: 'medias',
     name: 'MÉDIAS',
     color: '#C9A227',
