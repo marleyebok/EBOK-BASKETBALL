@@ -161,11 +161,11 @@ export const TOOLS: Tool[] = [
     id: 'medias',
     name: 'MÉDIAS',
     color: '#C9A227',
-    status: 'dev',
+    status: 'on',
     description: {
       fr: "L'annuaire des médias basket : presse, podcasts, joueurs et coachs à suivre.",
       en: 'The directory of basketball media: press, podcasts, players and coaches to follow.',
     },
-    url: '#',
+    url: 'https://ebok-medias.vercel.app/',
   },
 ];
