@@ -43,7 +43,7 @@ export const STATUSES: Record<StatusKey, Status> = {
 };
 
 /**
- * Les 9 outils de l'écosystème.
+ * Les outils de l'écosystème.
  * L'ordre du tableau = l'ordre d'affichage dans la grille.
  */
 export const TOOLS: Tool[] = [
@@ -143,6 +143,28 @@ export const TOOLS: Tool[] = [
     description: {
       fr: "L'actualité, les analyses et les coulisses de l'écosystème EBOK.",
       en: 'News, analysis and behind-the-scenes of the EBOK ecosystem.',
+    },
+    url: '#',
+  },
+  {
+    id: 'forum',
+    name: 'FORUM',
+    color: '#18A0C4',
+    status: 'off',
+    description: {
+      fr: "L'espace d'échange de la communauté : questions, conseils et débats basket.",
+      en: 'The community space: questions, advice and basketball talk.',
+    },
+    url: '#',
+  },
+  {
+    id: 'medias',
+    name: 'MÉDIAS',
+    color: '#C9A227',
+    status: 'off',
+    description: {
+      fr: "L'annuaire des médias basket : presse, podcasts, joueurs et coachs à suivre.",
+      en: 'The directory of basketball media: press, podcasts, players and coaches to follow.',
     },
     url: '#',
   },

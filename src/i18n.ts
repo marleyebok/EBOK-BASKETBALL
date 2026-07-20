@@ -16,13 +16,13 @@ export const ui = {
   fr: {
     'meta.title': 'EBOK Basketball — la boîte à outils des basketteurs',
     'meta.desc':
-      "Neuf outils pour les coachs, joueurs et clubs de basket francophones — du terrain à l'analyse. L'écosystème EBOK Basketball.",
+      "1 compte, 10 outils : la galaxie EBOK pour les coachs, joueurs et clubs de basket francophones — du terrain à l'analyse.",
     'nav.home': 'EBOK Basketball — accueil',
-    'hero.eyebrow': "L'écosystème du basket français",
+    'hero.eyebrow': '1 compte · 10 outils',
     'hero.titlePre': 'La boîte à outils des ',
     'hero.titleEm': 'basketteurs',
     'hero.lede':
-      "Neuf outils pour les coachs, joueurs et clubs francophones — du terrain à l'analyse. Chaque outil ouvre son propre site.",
+      "Une galaxie d'outils pour les coachs, joueurs et clubs francophones — du terrain à l'analyse. Chaque outil ouvre son propre site, et bientôt un seul compte les ouvrira tous.",
     'hero.cta': 'Demander un accès anticipé',
     'tools.aria': "Les outils de l'écosystème EBOK Basketball",
     'status.on': 'En ligne',
@@ -61,13 +61,13 @@ export const ui = {
   en: {
     'meta.title': "EBOK Basketball — the hoopers' toolkit",
     'meta.desc':
-      "Nine tools for French-speaking basketball coaches, players and clubs — from the court to the analysis. The EBOK Basketball ecosystem.",
+      'One account, ten tools: the EBOK galaxy for French-speaking basketball coaches, players and clubs — from the court to the analysis.',
     'nav.home': 'EBOK Basketball — home',
-    'hero.eyebrow': 'The French basketball ecosystem',
+    'hero.eyebrow': 'One account · Ten tools',
     'hero.titlePre': 'The toolkit for ',
     'hero.titleEm': 'hoopers',
     'hero.lede':
-      'Nine tools for French-speaking coaches, players and clubs — from the court to the analysis. Each tool opens its own site.',
+      'A galaxy of tools for French-speaking coaches, players and clubs — from the court to the analysis. Each tool opens its own site, and soon a single account will open them all.',
     'hero.cta': 'Request early access',
     'tools.aria': 'The tools of the EBOK Basketball ecosystem',
     'status.on': 'Online',
