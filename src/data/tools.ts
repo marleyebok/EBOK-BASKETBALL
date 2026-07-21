@@ -56,7 +56,7 @@ export const TOOLS: Tool[] = [
       fr: "L'échange de liens vidéo pensé pour les équipes amateurs.",
       en: 'Video-link sharing built for amateur teams.',
     },
-    url: 'https://ebok-video.vercel.app/',
+    url: 'https://video.ebok.fr/',
   },
   {
     id: 'playbook',
@@ -67,7 +67,7 @@ export const TOOLS: Tool[] = [
       fr: 'La vidéothèque des meilleurs systèmes de jeu, une base tactique pour les coachs.',
       en: 'A video library of the best plays — a tactical base for coaches.',
     },
-    url: '#',
+    url: 'https://playbook.ebok.fr/',
   },
   {
     id: 'event',
@@ -78,7 +78,7 @@ export const TOOLS: Tool[] = [
       fr: "L'agenda collaboratif du basket français : tournois, camps et détections.",
       en: 'The collaborative calendar of French basketball: tournaments, camps and tryouts.',
     },
-    url: 'https://ebok-event.vercel.app/',
+    url: 'https://event.ebok.fr/',
   },
   {
     id: 'stats',
@@ -89,7 +89,7 @@ export const TOOLS: Tool[] = [
       fr: "La saisie et l'analyse de statistiques, du live scoring au bilan de saison.",
       en: 'Stat tracking and analysis, from live scoring to season reviews.',
     },
-    url: '#',
+    url: 'https://stats.ebok.fr/',
   },
   {
     id: 'mercato',
@@ -100,7 +100,7 @@ export const TOOLS: Tool[] = [
       fr: 'La mise en relation entre clubs, joueurs et staffs — le marché amateur.',
       en: 'Connecting clubs, players and staff — the amateur transfer market.',
     },
-    url: '#',
+    url: 'https://mercato.ebok.fr/',
   },
   {
     id: 'notebook',
@@ -111,7 +111,7 @@ export const TOOLS: Tool[] = [
       fr: 'Rédigez, structurez et archivez toutes vos séances d’entraînement.',
       en: 'Write, structure and archive all your training sessions.',
     },
-    url: '#',
+    url: 'https://notebook.ebok.fr/',
   },
   {
     id: 'academie',
@@ -122,7 +122,7 @@ export const TOOLS: Tool[] = [
       fr: 'La formation : contenus pédagogiques pour joueurs et entraîneurs.',
       en: 'Training & education: learning content for players and coaches.',
     },
-    url: '#',
+    url: 'https://academie.ebok.fr/',
   },
   {
     id: 'scouting',
@@ -133,7 +133,7 @@ export const TOOLS: Tool[] = [
       fr: "Le scouting report complet pour analyser l'adversaire et préparer le match.",
       en: 'The complete scouting report to analyze opponents and prepare for the game.',
     },
-    url: '#',
+    url: 'https://scouting.ebok.fr/',
   },
   {
     id: 'blog',
@@ -144,7 +144,7 @@ export const TOOLS: Tool[] = [
       fr: "L'actualité, les analyses et les coulisses de l'écosystème EBOK.",
       en: 'News, analysis and behind-the-scenes of the EBOK ecosystem.',
     },
-    url: '#',
+    url: 'https://blog.ebok.fr/',
   },
   {
     id: 'forum',
@@ -155,7 +155,7 @@ export const TOOLS: Tool[] = [
       fr: "L'espace d'échange de la communauté : questions, conseils et débats basket.",
       en: 'The community space: questions, advice and basketball talk.',
     },
-    url: '#',
+    url: 'https://forum.ebok.fr/',
   },
   {
     id: 'workout',
@@ -166,7 +166,7 @@ export const TOOLS: Tool[] = [
       fr: 'La mise en relation entre joueurs, coachs individuels et préparateurs physiques.',
       en: 'Connecting players with individual coaches and physical trainers.',
     },
-    url: 'https://ebok-workout.vercel.app/',
+    url: 'https://workout.ebok.fr/',
   },
   {
     id: 'medias',
@@ -177,6 +177,6 @@ export const TOOLS: Tool[] = [
       fr: "L'annuaire des médias basket : presse, podcasts, joueurs et coachs à suivre.",
       en: 'The directory of basketball media: press, podcasts, players and coaches to follow.',
     },
-    url: 'https://ebok-medias.vercel.app/',
+    url: 'https://medias.ebok.fr/',
   },
 ];
