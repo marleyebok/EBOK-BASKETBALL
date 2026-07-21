@@ -242,8 +242,9 @@ svg {
   color: #b5710f;
 }
 .status.st-off {
-  --led: #ff4d5e;
-  color: #e0413f;
+  --led: #ff2d3f;
+  color: #ff3b47;
+  text-shadow: 0 0 8px color-mix(in srgb, var(--led) 45%, transparent);
 }
 .led {
   width: 9px;
@@ -255,6 +256,18 @@ svg {
 }
 .st-on .led {
   animation: ledpulse 2.2s ease-in-out infinite;
+}
+/* « Bientôt » : néon rouge qui clignote doucement, plus vif que les autres. */
+.st-off .led {
+  animation: ledpulse-red 1.7s ease-in-out infinite;
+}
+@keyframes ledpulse-red {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px var(--led), 0 0 10px 3px color-mix(in srgb, var(--led) 60%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px var(--led), 0 0 20px 7px color-mix(in srgb, var(--led) 85%, transparent);
+  }
 }
 @keyframes ledpulse {
   0%, 100% {
