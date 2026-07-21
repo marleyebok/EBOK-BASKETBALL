@@ -3,7 +3,7 @@
  */
 export const siteConfig = {
   /** Adresse de contact / destinataire de repli du formulaire. */
-  contactEmail: 'Ebok.basket@gmail.com',
+  contactEmail: 'contact@ebok.fr',
 
   /**
    * Endpoint Formspree pour le formulaire d'accès anticipé.
