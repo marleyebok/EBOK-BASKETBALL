@@ -20,7 +20,14 @@ SEO-friendly. Thème clair, aucune dépendance runtime superflue.
 
 ```bash
 npm install
+cp .env.example .env   # puis renseigne PUBLIC_CLERK_PUBLISHABLE_KEY
 ```
+
+### Variables d'environnement
+
+| Variable | Rôle |
+| --- | --- |
+| `PUBLIC_CLERK_PUBLISHABLE_KEY` | Clé publiable Clerk (compte unique EBOK). Active les boutons « Se connecter » / « Créer un compte ». Sans elle, les contrôles de compte restent masqués. À définir aussi dans l'hébergeur (Netlify / Vercel / Cloudflare Pages). |
 
 ## Scripts
 

@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 // Site 100 % statique, bilingue (FR par défaut à `/`, EN à `/en/`).
 // `site` = domaine de prod : URL canoniques, Open Graph, sitemap, hreflang.
 export default defineConfig({
-  site: 'https://ebok-basketball.vercel.app',
+  site: 'https://ebok.fr',
   output: 'static',
   integrations: [sitemap()],
   i18n: {

@@ -36,7 +36,7 @@ apps de la galaxie**. Techniquement :
 
 | App | Stack | Système de compte actuel | Chemin de migration |
 |---|---|---|---|
-| Basketball (mère) | Astro statique | aucun | Rien à migrer : liens « Se connecter » vers les apps |
+| Basketball (mère) | Astro statique | **Clerk** (`@clerk/clerk-js`, boutons « Se connecter » / « Créer un compte » dans le header) | ✅ Fait — domaine principal de l'instance Clerk (`ebok.fr`), point d'entrée du compte unique |
 | Event | HTML/JS + Firebase (`ebok-event-61657`) | Firebase Auth | Remplacer Firebase Auth par Clerk (SDK JS) ; garder Firestore pour les données au début |
 | Mercato | HTML/JS + Firebase | Firebase Auth (pages inscription/connexion) | Idem Event |
 | Video | Next.js + Prisma | Auth maison (codes de ligue, bcrypt/jose) | Ajouter Clerk pour l'identité ; conserver les codes de ligue comme mécanisme d'accès aux poules |
@@ -75,8 +75,10 @@ ex. `/api/clerk-webhook`) reçoit les événements Clerk `user.created` /
 
 ## Recette d'intégration Clerk (par app)
 
-La même checklist se rejoue pour chaque app, en commençant par l'app pilote
-(EBOK Event) :
+**Avancement** : Event et Playbook sont branchés à Clerk ; le site mère
+(`ebok.fr`) vient d'être équipé ✅. Ordre suivant : **Video**, puis **Mercato**.
+
+La même checklist se rejoue pour chaque app :
 
 - [ ] Installer le SDK Clerk adapté (`@clerk/clerk-js` pour les apps
       HTML/JS, `@clerk/nextjs` pour les apps Next.js).
