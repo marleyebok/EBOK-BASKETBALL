@@ -30,7 +30,7 @@ YouTube, TikTok, Twitch, site web…), et mise en avant des pépites du moment.
 ## Stack prévue (standard de la galaxie)
 
 - **Next.js** (App Router) déployé sur **Vercel** — sous-domaine
-  `medias.ebok-basketball.com`
+  `medias.ebok.fr`
 - **Clerk** pour les propositions de fiches (voir `docs/AUTH.md` du repo
   [EBOK-BASKETBALL](https://github.com/marleyebok/EBOK-BASKETBALL))
 - **Neon Postgres**, schéma `medias` + référence à la table partagée

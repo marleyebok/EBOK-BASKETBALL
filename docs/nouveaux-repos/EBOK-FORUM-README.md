@@ -29,7 +29,7 @@ dirigeants, parents, passionnés) échangent entre eux :
 ## Stack prévue (standard de la galaxie)
 
 - **Next.js** (App Router) déployé sur **Vercel** — sous-domaine
-  `forum.ebok-basketball.com`
+  `forum.ebok.fr`
 - **Clerk** pour le compte unique EBOK (voir `docs/AUTH.md` du repo
   [EBOK-BASKETBALL](https://github.com/marleyebok/EBOK-BASKETBALL))
 - **Neon Postgres**, schéma `forum` + référence à la table partagée

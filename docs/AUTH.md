@@ -10,9 +10,9 @@ Un visiteur crée **un seul compte EBOK** et il est connecté sur **toutes les
 apps de la galaxie**. Techniquement :
 
 1. Toutes les apps vivent en **sous-domaines d'un même domaine racine**
-   (`event.ebok-basketball.com`, `video.ebok-basketball.com`…).
+   (`event.ebok.fr`, `video.ebok.fr`…).
 2. L'authentification est portée par **Clerk** : le cookie de session est posé
-   sur `.ebok-basketball.com` et devient visible par toutes les apps.
+   sur `.ebok.fr` et devient visible par toutes les apps.
 3. Les profils vivent dans **une seule table partagée** (`shared.users` dans
    la base Neon), alimentée par un webhook Clerk. Chaque app y fait référence
    par l'identifiant `clerk_id` — jamais de table utilisateurs locale.
@@ -21,7 +21,7 @@ apps de la galaxie**. Techniquement :
                     ┌────────────────────┐
                     │       Clerk        │  identité, sessions, login UI
                     └─────────┬──────────┘
-              cookie .ebok-basketball.com  +  webhook user.created/updated
+              cookie .ebok.fr  +  webhook user.created/updated
         ┌───────────┬─────────┼──────────┬───────────┐
         ▼           ▼         ▼          ▼           ▼
      event.…     video.…   mercato.…  forum.…     (autres)
@@ -76,7 +76,7 @@ ex. `/api/clerk-webhook`) reçoit les événements Clerk `user.created` /
 ## Recette d'intégration Clerk (par app)
 
 **Avancement** : Event et Playbook sont branchés à Clerk ; le site mère
-(`ebok.fr`) vient d'être équipé ✅. Ordre suivant : **Video**, puis **Mercato**.
+(`ebok.fr`) vient d'être équipé ✅. Ordre suivant : **Mercato**, puis **Video**.
 
 La même checklist se rejoue pour chaque app :
 
@@ -94,9 +94,9 @@ La même checklist se rejoue pour chaque app :
 
 Sans ces deux actions, rien de ce qui précède ne peut être branché :
 
-1. **Acheter le domaine** `ebok-basketball.com` et brancher les sous-domaines
+1. **Acheter le domaine** `ebok.fr` et brancher les sous-domaines
    sur les projets Vercel (Roadmap Phase 0 et 1).
-2. **Créer le compte Clerk** (avec `admin@ebok-basketball.com`), instance de
+2. **Créer le compte Clerk** (avec `admin@ebok.fr`), instance de
    production sur le domaine, et créer le **projet Neon « ebok »**.
 
 Ensuite, l'intégration app par app (Phase 2 puis 3) est du ressort du code et
