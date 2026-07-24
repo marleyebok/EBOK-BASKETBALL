@@ -13,21 +13,23 @@
   'use strict';
 
   /* Source de vérité locale (miroir de src/data/tools.ts du site mère).
-     `url: null` = pas encore en ligne (affiché grisé, non cliquable). */
-  var HOME = { id: 'basketball', name: 'BASKETBALL', color: '#E8590C', url: 'https://ebok.fr/' };
+     `status` : 'on' = en ligne, 'dev' = en construction (le sous-domaine
+     affiche la page « en construction »). `url: null` = pas de sous-site
+     du tout (affiché grisé, non cliquable). */
+  var HOME = { id: 'basketball', name: 'BASKETBALL', color: '#E8590C', url: 'https://ebok.fr/', status: 'on' };
   var APPS = [
-    { id: 'video',    name: 'VIDEO',    color: '#1FA98C', url: 'https://video.ebok.fr/' },
-    { id: 'event',    name: 'EVENT',    color: '#E23A3A', url: 'https://event.ebok.fr/' },
-    { id: 'mercato',  name: 'MERCATO',  color: '#4CA62E', url: 'https://mercato.ebok.fr/' },
-    { id: 'playbook', name: 'PLAYBOOK', color: '#E08A2B', url: 'https://playbook.ebok.fr/' },
-    { id: 'stats',    name: 'STATS',    color: '#2E6FD6', url: 'https://stats.ebok.fr/' },
-    { id: 'notebook', name: 'NOTEBOOK', color: '#7A86A0', url: 'https://notebook.ebok.fr/' },
-    { id: 'academie', name: 'ACADÉMIE', color: '#8A4CE0', url: 'https://academie.ebok.fr/' },
-    { id: 'scouting', name: 'SCOUTING', color: '#EA5A3C', url: 'https://scouting.ebok.fr/' },
-    { id: 'blog',     name: 'BLOG',     color: '#C8317E', url: 'https://blog.ebok.fr/' },
-    { id: 'forum',    name: 'FORUM',    color: '#18A0C4', url: 'https://forum.ebok.fr/' },
-    { id: 'medias',   name: 'MÉDIAS',   color: '#C9A227', url: 'https://medias.ebok.fr/' },
-    { id: 'workout',  name: 'WORKOUT',  color: '#A3BD18', url: 'https://workout.ebok.fr/' }
+    { id: 'video',    name: 'VIDEO',    color: '#1FA98C', url: 'https://video.ebok.fr/',    status: 'on' },
+    { id: 'event',    name: 'EVENT',    color: '#E23A3A', url: 'https://event.ebok.fr/',    status: 'on' },
+    { id: 'mercato',  name: 'MERCATO',  color: '#4CA62E', url: 'https://mercato.ebok.fr/',  status: 'on' },
+    { id: 'playbook', name: 'PLAYBOOK', color: '#E08A2B', url: 'https://playbook.ebok.fr/', status: 'on' },
+    { id: 'stats',    name: 'STATS',    color: '#2E6FD6', url: 'https://stats.ebok.fr/',    status: 'dev' },
+    { id: 'notebook', name: 'NOTEBOOK', color: '#7A86A0', url: 'https://notebook.ebok.fr/', status: 'dev' },
+    { id: 'academie', name: 'ACADÉMIE', color: '#8A4CE0', url: 'https://academie.ebok.fr/', status: 'dev' },
+    { id: 'scouting', name: 'SCOUTING', color: '#EA5A3C', url: 'https://scouting.ebok.fr/', status: 'dev' },
+    { id: 'blog',     name: 'BLOG',     color: '#C8317E', url: 'https://blog.ebok.fr/',     status: 'dev' },
+    { id: 'forum',    name: 'FORUM',    color: '#18A0C4', url: 'https://forum.ebok.fr/',    status: 'dev' },
+    { id: 'medias',   name: 'MÉDIAS',   color: '#C9A227', url: 'https://medias.ebok.fr/',   status: 'dev' },
+    { id: 'workout',  name: 'WORKOUT',  color: '#A3BD18', url: 'https://workout.ebok.fr/',  status: 'dev' }
   ];
 
   /* Détecte l'app courante d'après le nom d'hôte (marche aussi en local). */
@@ -84,6 +86,7 @@
     node.appendChild(el('span', 'ebokg-name', 'EBOK ' + app.name));
     if (isNow) node.appendChild(el('span', 'ebokg-tag', 'vous êtes ici'));
     else if (!app.url) node.appendChild(el('span', 'ebokg-tag', 'bientôt'));
+    else if (app.status === 'dev') node.appendChild(el('span', 'ebokg-tag', 'en construction'));
     return node;
   }
 
