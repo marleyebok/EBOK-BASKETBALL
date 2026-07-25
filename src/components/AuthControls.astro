@@ -60,6 +60,31 @@ const t = useT(lang);
 
     const localizationPromise = import('@clerk/localizations').then((m) => m.frFR);
 
+    // Domaine Frontend API Clerk (`clerk.ebok.fr`), dérivé de la clé publiable
+    // (segment base64 entre le 2e et 3e « _ », sans le `$` final).
+    const clerkDomain = atob(PUBLISHABLE_KEY.split('_')[2]).slice(0, -1);
+
+    // `@clerk/clerk-js` seul ne suffit pas pour les modales (SignIn/SignUp/
+    // UserButton) : il faut aussi charger le bundle UI séparé et le passer
+    // explicitement à `.load()` — sans ça, Clerk se charge « en mode headless »
+    // et toute tentative d'ouvrir une modale échoue avec « Clerk was not loaded
+    // with Ui components ». C'était la vraie cause du bouton sans effet (le
+    // 403 d'allowlist masquait ce problème derrière un autre).
+    const win = window as typeof window & { __internal_ClerkUICtor?: any };
+    const uiScriptPromise = new Promise<void>((resolve, reject) => {
+      if (win.__internal_ClerkUICtor) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = `https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Échec du chargement du bundle UI Clerk'));
+      document.head.appendChild(script);
+    });
+
     // `clerk` est réaffectable : une instance dont le `.load()` reste bloqué
     // (réseau coupé, bloqueur de pub…) ne « retente » jamais rien en interne
     // si on rappelle `.load()` dessus — aucune nouvelle requête ne part, elle
@@ -98,8 +123,10 @@ const t = useT(lang);
     function ensureClerkLoaded(): Promise<void> {
       if (clerkReady) return Promise.resolve();
       if (!loadAttempt) {
-        const attempt = localizationPromise
-          .then((localization) => clerk.load({ localization }))
+        const attempt = Promise.all([localizationPromise, uiScriptPromise])
+          .then(([localization]) =>
+            clerk.load({ localization, ui: { ClerkUI: win.__internal_ClerkUICtor } })
+          )
           .then(() => {
             clerkReady = true;
             setupRenderOnce();
