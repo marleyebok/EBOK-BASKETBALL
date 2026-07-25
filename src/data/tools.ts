@@ -48,7 +48,7 @@ export interface Tool {
 /** Définition des trois statuts (libellés). Couleurs gérées en CSS. */
 export const STATUSES: Record<StatusKey, Status> = {
   on: { label: 'En ligne' },
-  dev: { label: 'En construction' },
+  dev: { label: 'En dev.' },
 };
 
 /**
