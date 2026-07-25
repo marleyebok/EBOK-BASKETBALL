@@ -37,6 +37,12 @@ export interface Tool {
    * '#' tant que le sous-domaine n'existe pas — voir NOTES.md.
    */
   url: string;
+  /**
+   * Logo fourni en image (chemin dans /public), à afficher à la place du
+   * logo généré en CSS. Optionnel : par défaut le logo CSS (`ToolLogo`) est
+   * utilisé, à partir de `name` + `color`.
+   */
+  logoImage?: string;
 }
 
 /** Définition des trois statuts (libellés). Couleurs gérées en CSS. */
@@ -159,6 +165,7 @@ export const TOOLS: Tool[] = [
       en: 'The community space: questions, advice and basketball talk.',
     },
     url: 'https://forum.ebok.fr/',
+    logoImage: '/logos/ebok-forum.png',
   },
   {
     id: 'workout',
@@ -181,5 +188,6 @@ export const TOOLS: Tool[] = [
       en: 'The directory of basketball media: press, podcasts, players and coaches to follow.',
     },
     url: 'https://medias.ebok.fr/',
+    logoImage: '/logos/ebok-medias.png',
   },
 ];

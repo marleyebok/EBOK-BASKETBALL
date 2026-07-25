@@ -40,7 +40,11 @@ const linkAttrs = hasLink
   aria-label={`EBOK ${tool.name} — ${statusLabel}`}
 >
   <div class="card-head">
-    <ToolLogo name={tool.name} color={tool.color} />
+    {tool.logoImage ? (
+      <img class="card-logo-img" src={tool.logoImage} alt={`EBOK ${tool.name}`} loading="lazy" />
+    ) : (
+      <ToolLogo name={tool.name} color={tool.color} />
+    )}
     <span class={`status st-${tool.status}`}><span class="led"></span>{statusLabel}</span>
   </div>
   <p class="card-desc">{tool.description[lang]}</p>
