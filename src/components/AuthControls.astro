@@ -33,9 +33,14 @@ const t = useT(lang);
 <script>
   import { Clerk } from '@clerk/clerk-js';
 
-  const PUBLISHABLE_KEY = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY as
-    | string
-    | undefined;
+  // Clé publiable de l'instance de production partagée de la galaxie
+  // (clerk.ebok.fr). Elle est PUBLIQUE (déjà utilisée par les autres apps EBOK),
+  // donc câblée ici en valeur par défaut pour que le compte fonctionne d'office.
+  // On peut la surcharger via PUBLIC_CLERK_PUBLISHABLE_KEY (ex. instance de test).
+  const DEFAULT_PUBLISHABLE_KEY = 'pk_live_Y2xlcmsuZWJvay5mciQ';
+  const PUBLISHABLE_KEY =
+    (import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined) ||
+    DEFAULT_PUBLISHABLE_KEY;
 
   const root = document.querySelector<HTMLElement>('.auth');
   if (!root) {
