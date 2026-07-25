@@ -98,7 +98,6 @@ export const ui = {
     'onb.step4.sub': 'Plusieurs choix possibles — vous pourrez changer d’avis à tout moment.',
     'onb.back': 'Retour',
     'onb.continue': 'Continuer',
-    'onb.finish': 'Terminer',
     'onb.saving': 'Enregistrement…',
     'onb.error': "Un problème est survenu. Réessayez, ou continuez, vous pourrez compléter votre profil plus tard.",
     'onb.skip': 'Passer pour l’instant',
@@ -188,7 +187,6 @@ export const ui = {
     'onb.step4.sub': 'Pick as many as you like — you can change this anytime.',
     'onb.back': 'Back',
     'onb.continue': 'Continue',
-    'onb.finish': 'Finish',
     'onb.saving': 'Saving…',
     'onb.error':
       'Something went wrong. Try again, or continue — you can complete your profile later.',
