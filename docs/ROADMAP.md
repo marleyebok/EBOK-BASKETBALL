@@ -9,11 +9,11 @@ Dix applications, **un seul domaine racine**, **un seul compte visiteur**, **une
 
 | Élément | Aujourd'hui | Cible |
 |---|---|---|
-| Site mère | ebok-basketball.vercel.app | `www.ebok-basketball.com` |
-| EBOK Event | ebok-event.vercel.app | `event.ebok-basketball.com` |
-| EBOK Video | ebok-video.vercel.app | `video.ebok-basketball.com` |
-| EBOK Mercato | ebok-mercato.vercel.app | `mercato.ebok-basketball.com` |
-| Autres apps | — | `playbook.ebok-basketball.com`, etc. |
+| Site mère | ebok-basketball.vercel.app | `www.ebok.fr` |
+| EBOK Event | ebok-event.vercel.app | `event.ebok.fr` |
+| EBOK Video | ebok-video.vercel.app | `video.ebok.fr` |
+| EBOK Mercato | ebok-mercato.vercel.app | `mercato.ebok.fr` |
+| Autres apps | — | `playbook.ebok.fr`, etc. |
 | Compte visiteur | Aucun | 1 compte valable partout (SSO) |
 
 **Pourquoi les sous-domaines sont LA décision clé :** deux sites sur le même
@@ -23,7 +23,7 @@ devient un projet complexe et payant.
 
 ## 2. Nom de domaine
 
-- **Acheter UN seul domaine** : `ebok-basketball.com` (~10–12 €/an).
+- **Acheter UN seul domaine** : `ebok.fr` (~10–12 €/an).
   Alternatives : `ebok.app`, `ebok.basketball`.
 - Registrar : **Cloudflare Registrar** (prix coûtant) ou OVH.
 - DNS géré chez **Cloudflare (gratuit)**.
@@ -31,7 +31,7 @@ devient un projet complexe et payant.
 ## 3. Emails
 
 ### Adresse « maître » (infrastructure)
-- `admin@ebok-basketball.com` via **Cloudflare Email Routing** (gratuit),
+- `admin@ebok.fr` via **Cloudflare Email Routing** (gratuit),
   redirigée vers la boîte Gmail principale.
 - **Tous** les comptes techniques (Vercel, GitHub, Neon, Cloudflare, Firebase)
   utilisent cette adresse unique.
@@ -46,7 +46,7 @@ devient un projet complexe et payant.
 
 ## 4. Compte unique (SSO)
 
-- L'auth vit sur le domaine racine : cookie posé sur `.ebok-basketball.com`,
+- L'auth vit sur le domaine racine : cookie posé sur `.ebok.fr`,
   visible par toutes les apps en sous-domaine.
 - Profils dans **une seule table `users`** partagée.
 
@@ -92,15 +92,15 @@ tard si > 10 000 utilisateurs actifs/mois.
 ## 8. Roadmap phase par phase
 
 ### Phase 0 — Fondations (1 à 2 jours)
-- [ ] Acheter `ebok-basketball.com`.
+- [ ] Acheter `ebok.fr`.
 - [ ] Compte Cloudflare + DNS du domaine.
 - [ ] Email Routing : `admin@` → Gmail.
 - [ ] Bitwarden + 2FA sur GitHub, Vercel, Neon, Cloudflare, Gmail.
 - [ ] Organisation GitHub `ebok-basketball`, transfert des repos.
-- [ ] Basculer les comptes techniques sur `admin@ebok-basketball.com`.
+- [ ] Basculer les comptes techniques sur `admin@ebok.fr`.
 
 ### Phase 1 — Domaines branchés (½ journée)
-- [ ] `www.ebok-basketball.com` (+ apex) sur le projet site mère.
+- [ ] `www.ebok.fr` (+ apex) sur le projet site mère.
 - [ ] `event.`, `video.`, `mercato.` sur leurs projets Vercel.
 - [ ] Vérifier HTTPS + redirections des anciennes URLs `*.vercel.app`.
 - [ ] Alias emails `event@`, `video@`, `mercato@`.

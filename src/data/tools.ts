@@ -5,12 +5,16 @@
  * Les composants lisent ces données pour dessiner les cartes, les logos,
  * les statuts et les descriptions.
  *
- * - Changer un statut : modifie `status` ('on' | 'dev' | 'off').
+ * - Changer un statut : modifie `status` ('on' | 'dev').
  * - Brancher le vrai sous-site : renseigne `url` (ex. https://video.ebok.fr).
  */
 
-/** Les trois états possibles d'un outil. */
-export type StatusKey = 'on' | 'dev' | 'off';
+/**
+ * Les deux états possibles d'un outil :
+ * - 'on'  : en ligne, le sous-site est ouvert au public.
+ * - 'dev' : en construction — le sous-domaine affiche la page « en construction ».
+ */
+export type StatusKey = 'on' | 'dev';
 
 export interface Status {
   /** Libellé affiché (statut discret + description). */
@@ -38,8 +42,7 @@ export interface Tool {
 /** Définition des trois statuts (libellés). Couleurs gérées en CSS. */
 export const STATUSES: Record<StatusKey, Status> = {
   on: { label: 'En ligne' },
-  dev: { label: 'En développement' },
-  off: { label: 'Bientôt' },
+  dev: { label: 'En construction' },
 };
 
 /**
@@ -62,7 +65,7 @@ export const TOOLS: Tool[] = [
     id: 'playbook',
     name: 'PLAYBOOK',
     color: '#E08A2B',
-    status: 'dev',
+    status: 'on',
     description: {
       fr: 'La vidéothèque des meilleurs systèmes de jeu, une base tactique pour les coachs.',
       en: 'A video library of the best plays — a tactical base for coaches.',
@@ -84,7 +87,7 @@ export const TOOLS: Tool[] = [
     id: 'stats',
     name: 'STATS',
     color: '#2E6FD6',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: "La saisie et l'analyse de statistiques, du live scoring au bilan de saison.",
       en: 'Stat tracking and analysis, from live scoring to season reviews.',
@@ -95,7 +98,7 @@ export const TOOLS: Tool[] = [
     id: 'mercato',
     name: 'MERCATO',
     color: '#4CA62E',
-    status: 'dev',
+    status: 'on',
     description: {
       fr: 'La mise en relation entre clubs, joueurs et staffs — le marché amateur.',
       en: 'Connecting clubs, players and staff — the amateur transfer market.',
@@ -106,7 +109,7 @@ export const TOOLS: Tool[] = [
     id: 'notebook',
     name: 'NOTEBOOK',
     color: '#7A86A0',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: 'Rédigez, structurez et archivez toutes vos séances d’entraînement.',
       en: 'Write, structure and archive all your training sessions.',
@@ -117,7 +120,7 @@ export const TOOLS: Tool[] = [
     id: 'academie',
     name: 'ACADÉMIE',
     color: '#8A4CE0',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: 'La formation : contenus pédagogiques pour joueurs et entraîneurs.',
       en: 'Training & education: learning content for players and coaches.',
@@ -128,7 +131,7 @@ export const TOOLS: Tool[] = [
     id: 'scouting',
     name: 'SCOUTING',
     color: '#EA5A3C',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: "Le scouting report complet pour analyser l'adversaire et préparer le match.",
       en: 'The complete scouting report to analyze opponents and prepare for the game.',
@@ -139,7 +142,7 @@ export const TOOLS: Tool[] = [
     id: 'blog',
     name: 'BLOG',
     color: '#C8317E',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: "L'actualité, les analyses et les coulisses de l'écosystème EBOK.",
       en: 'News, analysis and behind-the-scenes of the EBOK ecosystem.',
@@ -150,7 +153,7 @@ export const TOOLS: Tool[] = [
     id: 'forum',
     name: 'FORUM',
     color: '#18A0C4',
-    status: 'off',
+    status: 'dev',
     description: {
       fr: "L'espace d'échange de la communauté : questions, conseils et débats basket.",
       en: 'The community space: questions, advice and basketball talk.',
@@ -172,7 +175,7 @@ export const TOOLS: Tool[] = [
     id: 'medias',
     name: 'MÉDIAS',
     color: '#C9A227',
-    status: 'on',
+    status: 'dev',
     description: {
       fr: "L'annuaire des médias basket : presse, podcasts, joueurs et coachs à suivre.",
       en: 'The directory of basketball media: press, podcasts, players and coaches to follow.',

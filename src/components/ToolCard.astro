@@ -19,10 +19,13 @@ const lang = currentLang(Astro.currentLocale);
 const t = useT(lang);
 
 const hasLink = Boolean(tool.url && tool.url !== '#');
+const isOnline = tool.status === 'on';
 const statusLabel = t(`status.${tool.status}` as 'status.on');
-// Si l'outil a une vraie URL, on invite à l'ouvrir ; sinon libellé selon le statut.
-const ctaLabel = hasLink ? t('cta.on') : t(`cta.${tool.status}` as 'cta.on');
-const ctaOnline = hasLink;
+// Libellé de l'appel à l'action selon le statut :
+// 'on' → « Voir l'outil » (avec flèche) ; 'dev' → « Voir la page » (construction).
+const ctaLabel = t(`cta.${tool.status}` as 'cta.on');
+// Seuls les outils en ligne portent l'accent « actif » (flèche + couleur).
+const ctaOnline = isOnline;
 
 const Tag = hasLink ? 'a' : 'div';
 const linkAttrs = hasLink

@@ -16,7 +16,7 @@ export const siteConfig = {
   /**
    * Analytics respectueux de la vie privée (Plausible, sans cookies).
    * - Vide '' : désactivé (aucun script chargé).
-   * - Renseigne le domaine du site (ex. 'ebok-basketball.vercel.app') APRÈS avoir
+   * - Renseigne le domaine du site (ex. 'ebok.fr') APRÈS avoir
    *   créé le site sur https://plausible.io pour activer la mesure d'audience.
    */
   plausibleDomain: '',

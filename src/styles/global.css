@@ -149,6 +149,70 @@ svg {
   }
 }
 
+/* ---------- Compte EBOK (Clerk) --------------------------------------- */
+.auth {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Masqué tant que Clerk n'a pas décidé quel état afficher (évite le clignotement). */
+.auth[data-hidden] {
+  visibility: hidden;
+}
+.auth-out {
+  display: inline-flex;
+  gap: 8px;
+}
+.auth-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 7px 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+.auth-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.auth-btn.auth-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.auth-btn.auth-primary:hover {
+  background: var(--accent-ink);
+  border-color: var(--accent-ink);
+  color: #fff;
+}
+.auth-in {
+  display: inline-flex;
+  align-items: center;
+}
+@media (max-width: 560px) {
+  .auth {
+    left: 14px;
+  }
+  /* Sur mobile, on garde uniquement « Créer un compte » pour ne pas surcharger. */
+  .auth-out .auth-signin {
+    display: none;
+  }
+  .auth-btn {
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+}
+
 /* ---------- Hero ------------------------------------------------------ */
 .hero {
   text-align: center;
@@ -241,11 +305,6 @@ svg {
   --led: #ffa52b;
   color: #b5710f;
 }
-.status.st-off {
-  --led: #ff2d3f;
-  color: #ff3b47;
-  text-shadow: 0 0 8px color-mix(in srgb, var(--led) 45%, transparent);
-}
 .led {
   width: 9px;
   height: 9px;
@@ -256,18 +315,6 @@ svg {
 }
 .st-on .led {
   animation: ledpulse 2.2s ease-in-out infinite;
-}
-/* « Bientôt » : néon rouge qui clignote doucement, plus vif que les autres. */
-.st-off .led {
-  animation: ledpulse-red 1.7s ease-in-out infinite;
-}
-@keyframes ledpulse-red {
-  0%, 100% {
-    box-shadow: 0 0 4px 1px var(--led), 0 0 10px 3px color-mix(in srgb, var(--led) 60%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 8px 2px var(--led), 0 0 20px 7px color-mix(in srgb, var(--led) 85%, transparent);
-  }
 }
 @keyframes ledpulse {
   0%, 100% {

@@ -1,0 +1,92 @@
+---
+/**
+ * Contrôles de compte EBOK (Clerk) pour le site mère statique.
+ *
+ * Le site est 100 % statique : Clerk tourne donc entièrement côté navigateur
+ * via `@clerk/clerk-js`. La clé publiable (non secrète) est lue à la compilation
+ * depuis `PUBLIC_CLERK_PUBLISHABLE_KEY` (voir `.env.example`).
+ *
+ * - Déconnecté : boutons « Se connecter » et « Créer un compte » (modales Clerk).
+ * - Connecté   : avatar Clerk (`UserButton`) avec menu profil / déconnexion.
+ *
+ * SSO galaxie : en production, l'instance Clerk est le domaine principal
+ * `ebok.fr` ; le cookie de session posé sur `.ebok.fr` est partagé par tous les
+ * sous-domaines (video.ebok.fr, event.ebok.fr…). Rien à configurer ici : la clé
+ * publiable encode l'API frontend. Voir `docs/AUTH.md`.
+ */
+import { currentLang, useT } from '../i18n';
+
+const lang = currentLang(Astro.currentLocale);
+const t = useT(lang);
+---
+
+<nav class="auth" aria-label={t('auth.aria')} data-hidden>
+  <div class="auth-out" hidden>
+    <button type="button" class="auth-btn auth-signin">{t('auth.signin')}</button>
+    <button type="button" class="auth-btn auth-primary auth-signup">{t('auth.signup')}</button>
+  </div>
+  <div class="auth-in" hidden>
+    <div class="auth-user"></div>
+  </div>
+</nav>
+
+<script>
+  import { Clerk } from '@clerk/clerk-js';
+
+  // Clé publiable de l'instance de production partagée de la galaxie
+  // (clerk.ebok.fr). Elle est PUBLIQUE (déjà utilisée par les autres apps EBOK),
+  // donc câblée ici en valeur par défaut pour que le compte fonctionne d'office.
+  // On peut la surcharger via PUBLIC_CLERK_PUBLISHABLE_KEY (ex. instance de test).
+  const DEFAULT_PUBLISHABLE_KEY = 'pk_live_Y2xlcmsuZWJvay5mciQ';
+  const PUBLISHABLE_KEY =
+    (import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined) ||
+    DEFAULT_PUBLISHABLE_KEY;
+
+  const root = document.querySelector<HTMLElement>('.auth');
+  if (!root) {
+    // Rien à faire (composant absent de la page).
+  } else if (!PUBLISHABLE_KEY) {
+    // Clé absente : on laisse les contrôles masqués plutôt que d'afficher des
+    // boutons morts. À brancher via PUBLIC_CLERK_PUBLISHABLE_KEY (voir .env.example).
+    console.warn(
+      '[EBOK] Clerk désactivé : définis PUBLIC_CLERK_PUBLISHABLE_KEY pour activer le compte.'
+    );
+  } else {
+    const out = root.querySelector<HTMLElement>('.auth-out')!;
+    const inn = root.querySelector<HTMLElement>('.auth-in')!;
+    const userEl = root.querySelector<HTMLElement>('.auth-user')!;
+    const signInBtn = root.querySelector<HTMLElement>('.auth-signin')!;
+    const signUpBtn = root.querySelector<HTMLElement>('.auth-signup')!;
+
+    const clerk = new Clerk(PUBLISHABLE_KEY);
+
+    signInBtn.addEventListener('click', () => clerk.openSignIn());
+    signUpBtn.addEventListener('click', () => clerk.openSignUp());
+
+    // Localisation française si la page est en FR (chargée à la demande).
+    const isFr = document.documentElement.lang === 'fr';
+    const localization = isFr
+      ? (await import('@clerk/localizations')).frFR
+      : undefined;
+
+    await clerk.load({ localization });
+
+    let userMounted = false;
+    const render = () => {
+      const signedIn = Boolean(clerk.user);
+      out.hidden = signedIn;
+      inn.hidden = !signedIn;
+      if (signedIn && !userMounted) {
+        clerk.mountUserButton(userEl);
+        userMounted = true;
+      } else if (!signedIn && userMounted) {
+        clerk.unmountUserButton(userEl);
+        userMounted = false;
+      }
+    };
+
+    render();
+    clerk.addListener(render);
+    root.removeAttribute('data-hidden'); // révèle les contrôles une fois prêts
+  }
+</script>

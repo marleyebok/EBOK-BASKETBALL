@@ -2,6 +2,7 @@
 /** Header : logo centré + sélecteur de langue à droite. */
 import Logo from './Logo.astro';
 import LangSwitch from './LangSwitch.astro';
+import AuthControls from './AuthControls.astro';
 import { currentLang, useT, localizedPath } from '../i18n';
 
 const lang = currentLang(Astro.currentLocale);
@@ -10,6 +11,7 @@ const homeHref = localizedPath('/', lang);
 ---
 
 <header class="site-header">
+  <AuthControls />
   <a href={homeHref} aria-label={t('nav.home')}>
     <Logo />
   </a>
