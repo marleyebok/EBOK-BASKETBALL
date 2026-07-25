@@ -61,6 +61,50 @@ async function ensureSchema(): Promise<void> {
   schemaReady = true;
 }
 
+/** Profil d'un membre tel qu'enregistré par le questionnaire d'inscription. */
+export interface StoredProfile {
+  firstName: string | null;
+  lastName: string | null;
+  pseudo: string | null;
+  role: string | null;
+  roleOther: string | null;
+  staffRole: string | null;
+  staffRoleOther: string | null;
+  age: number | null;
+  sexe: string | null;
+  interests: string[];
+  onboardedAt: string | null;
+}
+
+/** Lit le profil d'un membre (ou null s'il n'a pas encore rempli le questionnaire). */
+export async function getStoredProfile(clerkId: string): Promise<StoredProfile | null> {
+  if (!hasDb()) return null;
+  try {
+    await ensureSchema();
+    const rows = await sql()`
+      SELECT first_name, last_name, pseudo, role, role_other, staff_role,
+             staff_role_other, age, sexe, interests, onboarded_at
+      FROM shared.users WHERE clerk_id = ${clerkId}`;
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      firstName: r.first_name,
+      lastName: r.last_name,
+      pseudo: r.pseudo,
+      role: r.role,
+      roleOther: r.role_other,
+      staffRole: r.staff_role,
+      staffRoleOther: r.staff_role_other,
+      age: r.age,
+      sexe: r.sexe,
+      interests: Array.isArray(r.interests) ? r.interests : [],
+      onboardedAt: r.onboarded_at ? String(r.onboarded_at) : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** Enregistre (ou met à jour) le profil d'onboarding d'un membre. */
 export async function upsertOnboardingProfile(p: OnboardingProfile): Promise<void> {
   await ensureSchema();

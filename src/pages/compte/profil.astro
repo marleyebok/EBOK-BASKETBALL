@@ -2,7 +2,6 @@
 export const prerender = true;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DashboardShell from '../../components/DashboardShell.astro';
-import { GENDERS, LEVELS, ROLES, TOOLS } from '../../lib/profile';
 ---
 
 <BaseLayout
@@ -15,74 +14,31 @@ import { GENDERS, LEVELS, ROLES, TOOLS } from '../../lib/profile';
       <p class="dash-crumb">Compte · Profil — ces infos sont valables sur toute la galaxie EBOK.</p>
     </div>
 
-    <div class="dash-toast" data-toast hidden>✓ Profil enregistré.</div>
     <div class="dash-error" data-error hidden></div>
 
-    <form class="dash-card dash-form" data-form>
-      <label>
-        Tu es
-        <select name="role">
-          <option value="">—</option>
-          {ROLES.map((r) => <option value={r}>{r}</option>)}
-        </select>
-      </label>
+    {/* Chargé côté navigateur (site statique) — voir le script en bas. */}
+    <div class="dash-card" data-loading>
+      <p class="dash-muted">Chargement de ton profil…</p>
+    </div>
 
-      <label>
-        Si « Autre », précise
-        <input name="roleOther" type="text" maxlength="60" placeholder="Ex. : Préparateur physique" />
-      </label>
+    {/* Profil déjà rempli : affichage en lecture seule. */}
+    <div class="dash-card" data-filled hidden>
+      <dl class="dash-dl" data-rows></dl>
+    </div>
 
-      <label>
-        Niveau de pratique
-        <select name="level">
-          <option value="">—</option>
-          {LEVELS.map((l) => <option value={l}>{l}</option>)}
-        </select>
-      </label>
+    {/* Questionnaire pas encore rempli. */}
+    <div class="dash-card" data-empty hidden>
+      <p style="margin-top:0"><strong>Ton profil n'est pas encore rempli.</strong></p>
+      <p class="dash-muted">
+        Quelques questions rapides pour personnaliser ton compte sur toute la galaxie.
+      </p>
+      <a class="dash-btn" href="/onboarding" style="margin-top:6px">Remplir mon profil</a>
+    </div>
 
-      <div class="dash-form-row">
-        <label>
-          Club / équipe
-          <input name="club" type="text" maxlength="80" placeholder="Ex. : ASVEL, Paris Basketball…" />
-        </label>
-        <label>
-          Homme / Femme
-          <select name="gender">
-            <option value="">—</option>
-            {GENDERS.map((g) => <option value={g}>{g}</option>)}
-          </select>
-        </label>
-      </div>
-
-      <div class="dash-form-row">
-        <label>
-          Âge
-          <input name="age" type="number" min="0" max="120" placeholder="Ex. : 24" />
-        </label>
-        <label>
-          Localisation
-          <input name="location" type="text" maxlength="80" placeholder="Ville, région…" />
-        </label>
-      </div>
-
-      <fieldset class="dash-fieldset">
-        <legend>Quels outils EBOK comptes-tu utiliser ? (plusieurs choix)</legend>
-        <div class="dash-chips">
-          {
-            TOOLS.map((t) => (
-              <label class="dash-chip">
-                <input type="checkbox" name="tools" value={t} />
-                {t}
-              </label>
-            ))
-          }
-        </div>
-      </fieldset>
-
-      <div>
-        <button class="dash-btn" type="submit" data-submit>Enregistrer mon profil</button>
-      </div>
-    </form>
+    <p class="dash-muted" data-edit hidden>
+      Pour modifier ces informations, refais le questionnaire →{' '}
+      <a href="/onboarding" style="color:var(--d-accent);font-weight:600">Modifier mon profil</a>.
+    </p>
 
     <p class="dash-muted" style="margin-top:16px">
       Nom, e-mail, mot de passe ou suppression du compte →{' '}
@@ -94,92 +50,46 @@ import { GENDERS, LEVELS, ROLES, TOOLS } from '../../lib/profile';
 <script>
   import type { Clerk } from '@clerk/clerk-js';
 
-  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
-  const toast = document.querySelector<HTMLElement>('[data-toast]')!;
+  const loading = document.querySelector<HTMLElement>('[data-loading]')!;
+  const filled = document.querySelector<HTMLElement>('[data-filled]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const editNote = document.querySelector<HTMLElement>('[data-edit]')!;
+  const rowsEl = document.querySelector<HTMLElement>('[data-rows]')!;
   const errorEl = document.querySelector<HTMLElement>('[data-error]')!;
-  const submitBtn = document.querySelector<HTMLButtonElement>('[data-submit]')!;
-
-  function field<T extends HTMLElement>(name: string): T {
-    return form.elements.namedItem(name) as unknown as T;
-  }
-
-  function showError(message: string) {
-    errorEl.textContent = message;
-    errorEl.hidden = false;
-  }
 
   /** Le shell prévient dès que Clerk est prêt et l'utilisateur connecté. */
   document.addEventListener('ebok:dash-ready', (async (event: CustomEvent<{ clerk: Clerk }>) => {
-    const { clerk } = event.detail;
+    const token = (await event.detail.clerk.session?.getToken()) ?? '';
 
-    /** Token de session, requis par l'API (`Authorization: Bearer`). */
-    const token = async () => (await clerk.session?.getToken()) ?? '';
-
-    // 1) Pré-remplissage depuis le profil déjà enregistré.
     try {
-      const res = await fetch('/api/profile', {
-        headers: { Authorization: `Bearer ${await token()}` },
-      });
-      if (res.ok) {
-        const { profile } = (await res.json()) as { profile: Record<string, unknown> };
-        for (const name of ['role', 'roleOther', 'level', 'club', 'gender', 'age', 'location']) {
-          const value = profile[name];
-          if (typeof value === 'string') field<HTMLInputElement>(name).value = value;
-        }
-        const tools = Array.isArray(profile.tools) ? (profile.tools as string[]) : [];
-        form
-          .querySelectorAll<HTMLInputElement>('input[name="tools"]')
-          .forEach((box) => (box.checked = tools.includes(box.value)));
-      } else if (res.status !== 401) {
-        showError('Impossible de charger ton profil pour le moment.');
-      }
-    } catch {
-      showError('Impossible de charger ton profil pour le moment.');
-    }
+      const res = await fetch('/api/profile', { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error(String(res.status));
 
-    // 2) Enregistrement.
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      toast.hidden = true;
-      errorEl.hidden = true;
-      submitBtn.disabled = true;
-      const original = submitBtn.textContent;
-      submitBtn.textContent = 'Enregistrement…';
-
-      const data = new FormData(form);
-      const payload = {
-        role: data.get('role'),
-        roleOther: data.get('roleOther'),
-        level: data.get('level'),
-        club: data.get('club'),
-        gender: data.get('gender'),
-        age: data.get('age'),
-        location: data.get('location'),
-        tools: data.getAll('tools'),
+      const { filled: isFilled, rows } = (await res.json()) as {
+        filled: boolean;
+        rows: { label: string; value: string }[];
       };
 
-      try {
-        const res = await fetch('/api/profile', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${await token()}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        if (res.ok) {
-          toast.hidden = false;
-          toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          const body = (await res.json().catch(() => ({}))) as { error?: string };
-          showError(body.error || "L'enregistrement a échoué. Réessaie dans un instant.");
-        }
-      } catch {
-        showError("L'enregistrement a échoué. Vérifie ta connexion et réessaie.");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = original;
+      loading.hidden = true;
+      if (!isFilled || rows.length === 0) {
+        empty.hidden = false;
+        return;
       }
-    });
+
+      // `textContent` plutôt que du HTML : ces valeurs viennent du membre.
+      for (const row of rows) {
+        const dt = document.createElement('dt');
+        dt.textContent = row.label;
+        const dd = document.createElement('dd');
+        dd.textContent = row.value;
+        rowsEl.append(dt, dd);
+      }
+      filled.hidden = false;
+      editNote.hidden = false;
+    } catch {
+      loading.hidden = true;
+      errorEl.textContent = 'Impossible de charger ton profil pour le moment.';
+      errorEl.hidden = false;
+    }
   }) as unknown as EventListener);
 </script>

@@ -1,9 +1,18 @@
 import type { APIRoute } from 'astro';
 import { verifyToken } from '@clerk/backend';
-import { getProfile, hasDb, saveProfile, TOOLS, type GalaxyProfile } from '../../lib/profile';
+import { getStoredProfile, hasDb } from '../../lib/db';
+import { profileRows } from '../../lib/profile-view';
 
 // Route serverless (le reste du site est statique — voir astro.config.mjs).
 export const prerender = false;
+
+/**
+ * Profil du compte unique EBOK, en LECTURE SEULE.
+ *
+ * Il n'y a qu'un seul formulaire de profilage dans la galaxie : le
+ * questionnaire d'inscription (/onboarding), qui écrit dans `shared.users`.
+ * Cette route ne fait que relire ce profil pour l'afficher — aucune écriture.
+ */
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -26,55 +35,17 @@ async function sessionUid(request: Request): Promise<string | null> {
   }
 }
 
-/** Garde commune aux deux méthodes : renvoie l'uid, ou une réponse d'erreur. */
-async function guard(request: Request): Promise<{ uid: string } | { error: Response }> {
+export const GET: APIRoute = async ({ request }) => {
   if (!process.env.CLERK_SECRET_KEY) {
-    return { error: json({ error: 'CLERK_SECRET_KEY manquante côté serveur.' }, 500) };
+    return json({ error: 'CLERK_SECRET_KEY manquante côté serveur.' }, 500);
   }
   if (!hasDb()) {
-    return { error: json({ error: 'DATABASE_URL manquante côté serveur.' }, 500) };
+    return json({ error: 'DATABASE_URL manquante côté serveur.' }, 500);
   }
+
   const uid = await sessionUid(request);
-  if (!uid) return { error: json({ error: 'Non authentifié.' }, 401) };
-  return { uid };
-}
+  if (!uid) return json({ error: 'Non authentifié.' }, 401);
 
-export const GET: APIRoute = async ({ request }) => {
-  const g = await guard(request);
-  if ('error' in g) return g.error;
-  return json({ profile: await getProfile(g.uid) });
-};
-
-export const POST: APIRoute = async ({ request }) => {
-  const g = await guard(request);
-  if ('error' in g) return g.error;
-
-  let body: Record<string, unknown>;
-  try {
-    body = await request.json();
-  } catch {
-    return json({ error: 'JSON invalide.' }, 400);
-  }
-
-  const s = (key: string, max = 120): string | undefined =>
-    String(body[key] ?? '')
-      .trim()
-      .slice(0, max) || undefined;
-  const tools = Array.isArray(body.tools)
-    ? body.tools.filter((t): t is string => typeof t === 'string' && (TOOLS as readonly string[]).includes(t))
-    : [];
-
-  const data: GalaxyProfile = {
-    role: s('role'),
-    roleOther: s('roleOther', 60),
-    level: s('level'),
-    club: s('club', 80),
-    gender: s('gender'),
-    age: s('age', 3),
-    location: s('location', 80),
-    tools,
-  };
-
-  await saveProfile(g.uid, data);
-  return json({ ok: true });
+  const profile = await getStoredProfile(uid);
+  return json({ filled: Boolean(profile), rows: profileRows(profile) });
 };

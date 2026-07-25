@@ -736,23 +736,20 @@ svg {
 
 .dash-clerk { display: flex; }
 .dash-sq { width: 24px; height: 24px; border-radius: 7px; flex: 0 0 auto; display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 800; }
-.dash-toast { background: rgba(46, 125, 50, 0.12); color: #2e7d32; border: 1px solid rgba(46, 125, 50, 0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-weight: 600; }
 .dash-error { background: rgba(211, 47, 47, 0.1); color: #c62828; border: 1px solid rgba(211, 47, 47, 0.28); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-weight: 600; }
 
-/* --- Formulaire de profil --- */
-.dash-form { display: flex; flex-direction: column; gap: 16px; }
-.dash-form label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 14px; color: var(--d-ink); }
-.dash-form input[type='text'], .dash-form input[type='number'], .dash-form select {
-  background: #fff; border: 1px solid var(--d-line); border-radius: 12px; padding: 11px 14px; color: var(--d-ink); font: inherit;
+/* --- Profil en lecture seule (rempli par le questionnaire /onboarding) --- */
+.dash-dl { display: grid; grid-template-columns: minmax(150px, 210px) 1fr; gap: 2px 18px; margin: 0; }
+.dash-dl dt { color: var(--d-muted); font-size: 13.5px; font-weight: 600; padding: 9px 0; }
+.dash-dl dd { margin: 0; padding: 9px 0; font-weight: 600; }
+.dash-dl dt + dd { border-bottom: 1px solid var(--d-line); }
+.dash-dl dt { border-bottom: 1px solid var(--d-line); }
+.dash-dl dt:last-of-type, .dash-dl dd:last-of-type { border-bottom: 0; }
+@media (max-width: 560px) {
+  .dash-dl { grid-template-columns: 1fr; gap: 0; }
+  .dash-dl dt { padding-bottom: 0; border-bottom: 0; }
+  .dash-dl dd { padding-top: 2px; }
 }
-.dash-form input:focus, .dash-form select:focus { outline: none; border-color: var(--d-accent); }
-.dash-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.dash-fieldset { border: 1px solid var(--d-line); border-radius: 12px; padding: 12px 14px; }
-.dash-fieldset legend { padding: 0 6px; font-size: 12px; font-weight: 700; color: var(--d-muted); }
-.dash-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.dash-chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--d-line); border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--d-ink); background: #fff; }
-.dash-form .dash-chip { flex-direction: row; }
-@media (max-width: 640px) { .dash-form-row { grid-template-columns: 1fr; } }
 
 /* --- Portail de connexion (non connecté) --- */
 .dash-gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f5f6f8; padding: 20px; }
