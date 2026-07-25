@@ -1,15 +1,15 @@
 ---
 /**
- * Layout de base : <head> (SEO / Open Graph / JSON-LD / hreflang), polices
- * self-hostées, styles globaux, analytics optionnel. Toutes les pages passent
- * par ici. Bilingue via `Astro.currentLocale`.
+ * Layout de base : <head> (SEO / Open Graph / JSON-LD), polices self-hostées,
+ * styles globaux, analytics optionnel. Toutes les pages passent par ici.
+ * Site en français uniquement.
  */
 import '@fontsource/anton';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 
 import { siteConfig } from '../config';
-import { currentLang, useT, localizedPath, ogLocale, locales } from '../i18n';
+import { currentLang, useT } from '../i18n';
 
 interface Props {
   title?: string;
@@ -25,12 +25,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og-image.png', Astro.site).href;
 const siteUrl = new URL('/', Astro.site).href;
 
-// Liens alternates (hreflang) vers la même page dans chaque langue.
-const alternates = locales.map((l) => ({
-  lang: l,
-  href: new URL(localizedPath(Astro.url.pathname, l), Astro.site).href,
-}));
-
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -43,7 +37,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,11 +51,6 @@ const jsonLd = {
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
 
-    {alternates.map((a) => (
-      <link rel="alternate" hreflang={a.lang} href={a.href} />
-    ))}
-    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
-
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="EBOK Basketball" />
@@ -71,7 +60,7 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content={ogLocale[lang]} />
+    <meta property="og:locale" content="fr_FR" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -89,7 +78,6 @@ const jsonLd = {
     )}
   </head>
   <body>
-    <script src="/ebok-galaxy.js" defer is:inline></script>
     <slot />
   </body>
 </html>

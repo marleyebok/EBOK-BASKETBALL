@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 
-// Site bilingue (FR par défaut à `/`, EN à `/en/`), déployé sur Vercel.
-// `site` = domaine de prod : URL canoniques, Open Graph, sitemap, hreflang.
+// Site en français uniquement, déployé sur Vercel.
+// `site` = domaine de prod : URL canoniques, Open Graph, sitemap.
 //
 // `output: 'server'` est nécessaire pour la route API `/api/onboarding`
 // (écriture dans Neon). Le reste du site reste statique : chaque page
@@ -15,11 +15,4 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [sitemap()],
-  i18n: {
-    locales: ['fr', 'en'],
-    defaultLocale: 'fr',
-    routing: {
-      prefixDefaultLocale: false, // fr à la racine, en sous /en/
-    },
-  },
 });

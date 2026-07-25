@@ -60,21 +60,26 @@ const t = useT(lang);
 
     const clerk = new Clerk(PUBLISHABLE_KEY);
 
+    // Les boutons peuvent être révélés (filet de sécurité ci-dessous) avant
+    // que Clerk ait fini de charger : un clic attend `loadPromise` plutôt que
+    // d'appeler l'API Clerk trop tôt (ce qui ne faisait alors rien du tout —
+    // le bouton « Créer un compte » semblait sans effet).
     // `oauthFlow: 'popup'` : Google (et les autres providers OAuth) restent
     // dans une popup plutôt qu'une redirection plein écran — la session est
     // déjà active côté client au moment où Clerk applique la redirection.
-    signInBtn.addEventListener('click', () => clerk.openSignIn({ oauthFlow: 'popup' }));
+    signInBtn.addEventListener('click', async () => {
+      await loadPromise;
+      clerk.openSignIn({ oauthFlow: 'popup' });
+    });
     // Après inscription : questionnaire de bienvenue (une seule fois par
     // compte, quelle que soit l'app où l'inscription a eu lieu).
-    signUpBtn.addEventListener('click', () =>
-      clerk.openSignUp({ forceRedirectUrl: '/onboarding', oauthFlow: 'popup' })
-    );
+    signUpBtn.addEventListener('click', async () => {
+      await loadPromise;
+      clerk.openSignUp({ forceRedirectUrl: '/onboarding', oauthFlow: 'popup' });
+    });
 
-    // Localisation française si la page est en FR (chargée à la demande).
-    const isFr = document.documentElement.lang === 'fr';
-    const localizationPromise = isFr
-      ? import('@clerk/localizations').then((m) => m.frFR)
-      : Promise.resolve(undefined);
+    // Localisation française (une seule langue sur ce site).
+    const localizationPromise = import('@clerk/localizations').then((m) => m.frFR);
 
     const loadPromise = localizationPromise
       .then((localization) => clerk.load({ localization }))

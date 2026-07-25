@@ -1,10 +1,10 @@
 ---
 /** Hero : surtitre, titre, sous-titre, accès anticipé. */
-import { currentLang, useT, localizedPath } from '../i18n';
+import { currentLang, useT } from '../i18n';
 
 const lang = currentLang(Astro.currentLocale);
 const t = useT(lang);
-const eaHref = localizedPath('/acces-anticipe', lang);
+const eaHref = '/acces-anticipe';
 ---
 
 <section class="hero wrap" aria-labelledby="hero-title">

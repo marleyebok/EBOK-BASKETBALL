@@ -115,44 +115,10 @@ svg {
   align-items: center;
   justify-content: center;
 }
-.lang-switch {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  gap: 2px;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  padding: 3px;
-}
-.lang-switch .lang {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: var(--muted);
-  padding: 5px 10px;
-  border-radius: 999px;
-  line-height: 1;
-}
-.lang-switch .lang.active {
-  background: var(--ink);
-  color: #fff;
-}
-.lang-switch .lang:hover:not(.active) {
-  color: var(--ink);
-}
-@media (max-width: 480px) {
-  .lang-switch {
-    right: 14px;
-  }
-}
-
 /* ---------- Compte EBOK (Clerk) --------------------------------------- */
 .auth {
   position: absolute;
-  left: 24px;
+  right: 24px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -201,7 +167,7 @@ svg {
 }
 @media (max-width: 560px) {
   .auth {
-    left: 14px;
+    right: 14px;
   }
   /* Sur mobile, on garde uniquement « Créer un compte » pour ne pas surcharger. */
   .auth-out .auth-signin {

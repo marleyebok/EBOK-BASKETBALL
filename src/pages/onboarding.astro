@@ -3,7 +3,7 @@ export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Logo from '../components/Logo.astro';
 import { TOOLS } from '../data/tools';
-import { currentLang, useT, localizedPath } from '../i18n';
+import { currentLang, useT } from '../i18n';
 
 const lang = currentLang(Astro.currentLocale);
 const t = useT(lang);
@@ -32,7 +32,7 @@ const STAFF_ROLES = [
 ] as const;
 
 const SEXES = ['homme', 'femme', 'autre', 'non_precise'] as const;
-const homeHref = localizedPath('/', lang);
+const homeHref = '/';
 ---
 
 <BaseLayout title={t('onb.metaTitle')} description={t('onb.metaDesc')}>
