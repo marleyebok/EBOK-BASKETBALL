@@ -1,0 +1,321 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import { TOOLS } from '../data/tools';
+import { currentLang, useT } from '../i18n';
+
+const lang = currentLang(Astro.currentLocale);
+const t = useT(lang);
+
+const ROLES = [
+  'joueur',
+  'coach',
+  'staff',
+  'club',
+  'organisation',
+  'spectateur',
+  'parent',
+  'autre',
+] as const;
+
+const STAFF_ROLES = [
+  'assistant',
+  'dev_joueur',
+  'video',
+  'prepa_physique',
+  'prepa_mental',
+  'kine',
+  'osteo',
+  'medecin',
+  'autre',
+] as const;
+
+const SEXES = ['homme', 'femme', 'autre', 'non_precise'] as const;
+---
+
+<BaseLayout title={t('onb.metaTitle')} description={t('onb.metaDesc')}>
+  <Header />
+  <main class="wrap form-page">
+    <div class="form-card">
+      <span class="eyebrow"><span class="dot"></span> {t('onb.eyebrow')}</span>
+
+      <div class="onb-progress" id="onb-progress">
+        <span class="active" data-step="1"></span>
+        <span data-step="2"></span>
+        <span data-step="3"></span>
+        <span data-step="4"></span>
+      </div>
+
+      <form id="onb-form" novalidate>
+        <!-- Étape 1 : identité -->
+        <section class="onb-step active" data-step="1">
+          <h2>{t('onb.step1.title')}</h2>
+          <label class="field">
+            <span class="label">{t('onb.firstName')}</span>
+            <input type="text" name="firstName" autocomplete="given-name" maxlength="80" />
+          </label>
+          <label class="field">
+            <span class="label">{t('onb.lastName')}</span>
+            <input type="text" name="lastName" autocomplete="family-name" maxlength="80" />
+          </label>
+          <label class="field">
+            <span class="label">{t('onb.pseudo')}</span>
+            <input type="text" name="pseudo" required maxlength="40" autocomplete="nickname" />
+          </label>
+        </section>
+
+        <!-- Étape 2 : rôle -->
+        <section class="onb-step" data-step="2">
+          <h2>{t('onb.step2.title')}</h2>
+          <div class="option-list" id="onb-role-list">
+            {ROLES.map((r) => (
+              <label class="option-row">
+                <span>{t(`onb.role.${r}` as 'onb.role.joueur')}</span>
+                <input type="radio" name="role" value={r} required />
+              </label>
+            ))}
+          </div>
+
+          <div class="onb-substep" id="onb-role-other" hidden>
+            <label class="field">
+              <input
+                type="text"
+                name="roleOther"
+                maxlength="120"
+                placeholder={t('onb.roleOtherPlaceholder')}
+              />
+            </label>
+          </div>
+
+          <div class="onb-substep" id="onb-staff-block" hidden>
+            <h2 style="font-size:16px; margin-bottom:14px;">{t('onb.staff.title')}</h2>
+            <div class="option-list" id="onb-staff-list">
+              {STAFF_ROLES.map((r) => (
+                <label class="option-row">
+                  <span>{t(`onb.staff.${r}` as 'onb.staff.assistant')}</span>
+                  <input type="radio" name="staffRole" value={r} />
+                </label>
+              ))}
+            </div>
+            <div class="onb-substep" id="onb-staff-other" hidden>
+              <label class="field">
+                <input
+                  type="text"
+                  name="staffRoleOther"
+                  maxlength="120"
+                  placeholder={t('onb.staffOtherPlaceholder')}
+                />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Étape 3 : âge / sexe -->
+        <section class="onb-step" data-step="3">
+          <h2>{t('onb.step3.title')}</h2>
+          <label class="field">
+            <span class="label">{t('onb.age')}</span>
+            <input type="number" name="age" min="1" max="119" />
+          </label>
+          <div class="field">
+            <span class="label">{t('onb.sexe')}</span>
+            <div class="option-list">
+              {SEXES.map((s) => (
+                <label class="option-row">
+                  <span>{t(`onb.sexe.${s}` as 'onb.sexe.homme')}</span>
+                  <input type="radio" name="sexe" value={s} />
+                </label>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <!-- Étape 4 : outils -->
+        <section class="onb-step" data-step="4">
+          <h2>{t('onb.step4.title')}</h2>
+          <p class="lede" style="margin-top:-14px;">{t('onb.step4.sub')}</p>
+          <div class="tool-picker">
+            {TOOLS.map((tool) => (
+              <label class="pick" style={`--c:${tool.color}`}>
+                <input type="checkbox" name="interests" value={tool.id} />
+                <span class="swatch"></span>
+                {tool.name}
+              </label>
+            ))}
+          </div>
+        </section>
+
+        <p class="form-note" id="onb-error" hidden>{t('onb.error')}</p>
+
+        <div class="onb-nav">
+          <a class="btn-ghost" id="onb-back" href="#" hidden>{t('onb.back')}</a>
+          <button type="button" class="contact-btn" id="onb-next">{t('onb.continue')}</button>
+          <button type="submit" class="contact-btn" id="onb-submit" hidden>{t('onb.finish')}</button>
+        </div>
+        <p class="form-note">
+          <a href="#" id="onb-skip">{t('onb.skip')}</a>
+        </p>
+      </form>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { Clerk } from '@clerk/clerk-js';
+
+  const DEFAULT_PUBLISHABLE_KEY = 'pk_live_Y2xlcmsuZWJvay5mciQ';
+  const PUBLISHABLE_KEY =
+    (import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined) ||
+    DEFAULT_PUBLISHABLE_KEY;
+
+  const TOTAL_STEPS = 4;
+
+  /** Ne redirige que vers un sous-domaine ebok.fr (protection open-redirect). */
+  function safeReturnTo(): string {
+    const raw = new URLSearchParams(location.search).get('return_to');
+    if (!raw) return '/';
+    try {
+      const url = new URL(raw);
+      const okHost = url.hostname === 'ebok.fr' || url.hostname.endsWith('.ebok.fr');
+      if (url.protocol === 'https:' && okHost) return url.href;
+    } catch {
+      // URL invalide → repli
+    }
+    return '/';
+  }
+
+  async function main() {
+    if (!PUBLISHABLE_KEY) return;
+    const clerk = new Clerk(PUBLISHABLE_KEY);
+    await clerk.load();
+
+    const dest = safeReturnTo();
+
+    if (!clerk.user) {
+      // Personne à onboarder : retour à l'accueil.
+      location.href = '/';
+      return;
+    }
+    if (clerk.user.publicMetadata?.onboarded) {
+      location.href = dest;
+      return;
+    }
+
+    const form = document.getElementById('onb-form') as HTMLFormElement;
+    const progress = document.querySelectorAll<HTMLElement>('#onb-progress span');
+    const steps = document.querySelectorAll<HTMLElement>('.onb-step');
+    const backBtn = document.getElementById('onb-back') as HTMLAnchorElement;
+    const nextBtn = document.getElementById('onb-next') as HTMLButtonElement;
+    const submitBtn = document.getElementById('onb-submit') as HTMLButtonElement;
+    const skipLink = document.getElementById('onb-skip') as HTMLAnchorElement;
+    const errorEl = document.getElementById('onb-error') as HTMLElement;
+
+    const roleOtherBlock = document.getElementById('onb-role-other') as HTMLElement;
+    const staffBlock = document.getElementById('onb-staff-block') as HTMLElement;
+    const staffOtherBlock = document.getElementById('onb-staff-other') as HTMLElement;
+
+    let current = 1;
+
+    function showStep(n: number) {
+      current = n;
+      steps.forEach((s) => s.classList.toggle('active', Number(s.dataset.step) === n));
+      progress.forEach((p) => {
+        const step = Number(p.dataset.step);
+        p.classList.toggle('active', step === n);
+        p.classList.toggle('done', step < n);
+      });
+      backBtn.hidden = n === 1;
+      nextBtn.hidden = n === TOTAL_STEPS;
+      submitBtn.hidden = n !== TOTAL_STEPS;
+    }
+
+    function currentStepValid(): boolean {
+      if (current === 1) {
+        return (form.elements.namedItem('pseudo') as HTMLInputElement).value.trim() !== '';
+      }
+      if (current === 2) {
+        const role = form.querySelector<HTMLInputElement>('input[name="role"]:checked');
+        if (!role) return false;
+        if (role.value === 'staff') {
+          return Boolean(form.querySelector<HTMLInputElement>('input[name="staffRole"]:checked'));
+        }
+        return true;
+      }
+      return true;
+    }
+
+    // Rôle → affiche « autre » (texte libre) et/ou le bloc staff.
+    form.querySelectorAll<HTMLInputElement>('input[name="role"]').forEach((input) => {
+      input.addEventListener('change', () => {
+        roleOtherBlock.hidden = input.value !== 'autre' || !input.checked;
+        staffBlock.hidden = input.value !== 'staff' || !input.checked;
+      });
+    });
+    form.querySelectorAll<HTMLInputElement>('input[name="staffRole"]').forEach((input) => {
+      input.addEventListener('change', () => {
+        staffOtherBlock.hidden = input.value !== 'autre' || !input.checked;
+      });
+    });
+
+    backBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (current > 1) showStep(current - 1);
+    });
+    nextBtn.addEventListener('click', () => {
+      if (!currentStepValid()) {
+        form.reportValidity();
+        return;
+      }
+      if (current < TOTAL_STEPS) showStep(current + 1);
+    });
+    skipLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.href = dest;
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.hidden = true;
+      submitBtn.disabled = true;
+      const originalLabel = submitBtn.textContent;
+      submitBtn.textContent = submitBtn.dataset.saving || '…';
+
+      const data = new FormData(form);
+      const payload = {
+        firstName: data.get('firstName') || '',
+        lastName: data.get('lastName') || '',
+        pseudo: data.get('pseudo') || '',
+        role: data.get('role') || '',
+        roleOther: data.get('roleOther') || null,
+        staffRole: data.get('staffRole') || null,
+        staffRoleOther: data.get('staffRoleOther') || null,
+        age: data.get('age') || null,
+        sexe: data.get('sexe') || null,
+        interests: data.getAll('interests'),
+      };
+
+      try {
+        const token = await clerk.session?.getToken();
+        const res = await fetch('/api/onboarding', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('request failed');
+        location.href = dest;
+      } catch {
+        errorEl.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    });
+
+    showStep(1);
+  }
+
+  main();
+</script>

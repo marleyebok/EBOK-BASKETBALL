@@ -554,6 +554,108 @@ svg {
   text-align: center;
 }
 
+/* ---------- Onboarding (questionnaire post-inscription) --------------- */
+.onb-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: clamp(24px, 5vw, 40px);
+}
+.onb-progress span {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background 0.2s ease;
+}
+.onb-progress span.done,
+.onb-progress span.active {
+  background: var(--accent);
+}
+.onb-step {
+  display: none;
+}
+.onb-step.active {
+  display: block;
+}
+.onb-step h2 {
+  font-size: clamp(21px, 3.4vw, 27px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 22px;
+  text-wrap: balance;
+}
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.option-row:hover {
+  border-color: var(--accent);
+}
+.option-row input {
+  accent-color: var(--accent);
+  width: 19px;
+  height: 19px;
+  flex: none;
+}
+.option-row:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.onb-substep {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-strong);
+}
+.field input[type='text'],
+.field input[type='number'] {
+  width: 100%;
+  font: inherit;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.field input[type='text']:focus-visible,
+.field input[type='number']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+.onb-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+}
+.onb-nav .contact-btn {
+  flex: 1;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+.onb-nav .btn-ghost {
+  flex: none;
+}
+.onb-nav .contact-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ---------- Mouvement réduit ------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   html {

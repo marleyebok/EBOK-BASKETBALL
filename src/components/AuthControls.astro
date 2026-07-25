@@ -61,7 +61,9 @@ const t = useT(lang);
     const clerk = new Clerk(PUBLISHABLE_KEY);
 
     signInBtn.addEventListener('click', () => clerk.openSignIn());
-    signUpBtn.addEventListener('click', () => clerk.openSignUp());
+    // Après inscription : questionnaire de bienvenue (une seule fois par
+    // compte, quelle que soit l'app où l'inscription a eu lieu).
+    signUpBtn.addEventListener('click', () => clerk.openSignUp({ forceRedirectUrl: '/onboarding' }));
 
     // Localisation française si la page est en FR (chargée à la demande).
     const isFr = document.documentElement.lang === 'fr';
