@@ -60,10 +60,15 @@ const t = useT(lang);
 
     const clerk = new Clerk(PUBLISHABLE_KEY);
 
-    signInBtn.addEventListener('click', () => clerk.openSignIn());
+    // `oauthFlow: 'popup'` : Google (et les autres providers OAuth) restent
+    // dans une popup plutôt qu'une redirection plein écran — la session est
+    // déjà active côté client au moment où Clerk applique la redirection.
+    signInBtn.addEventListener('click', () => clerk.openSignIn({ oauthFlow: 'popup' }));
     // Après inscription : questionnaire de bienvenue (une seule fois par
     // compte, quelle que soit l'app où l'inscription a eu lieu).
-    signUpBtn.addEventListener('click', () => clerk.openSignUp({ forceRedirectUrl: '/onboarding' }));
+    signUpBtn.addEventListener('click', () =>
+      clerk.openSignUp({ forceRedirectUrl: '/onboarding', oauthFlow: 'popup' })
+    );
 
     // Localisation française si la page est en FR (chargée à la demande).
     const isFr = document.documentElement.lang === 'fr';
