@@ -33,6 +33,15 @@
   box-sizing: border-box;
 }
 
+/* L'attribut `hidden` doit toujours masquer, même sur un élément à qui on a
+   donné un `display` explicite (`.auth-out`, `.btn-ghost`…). Sans ce garde-fou,
+   `el.hidden = true` en JS ne masque rien : c'est ce qui laissait les boutons
+   « Se connecter »/« Créer un compte » affichés à côté de l'avatar une fois
+   connecté, et « Précédent » visible à l'étape 1 du questionnaire. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
