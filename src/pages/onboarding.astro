@@ -1,9 +1,9 @@
 ---
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
+import Logo from '../components/Logo.astro';
 import { TOOLS } from '../data/tools';
-import { currentLang, useT } from '../i18n';
+import { currentLang, useT, localizedPath } from '../i18n';
 
 const lang = currentLang(Astro.currentLocale);
 const t = useT(lang);
@@ -32,10 +32,18 @@ const STAFF_ROLES = [
 ] as const;
 
 const SEXES = ['homme', 'femme', 'autre', 'non_precise'] as const;
+const homeHref = localizedPath('/', lang);
 ---
 
 <BaseLayout title={t('onb.metaTitle')} description={t('onb.metaDesc')}>
-  <Header />
+  {/* Pas de <Header/> ici : il embarque <AuthControls/>, qui instancierait
+      Clerk une deuxième fois sur cette page en plus du script ci-dessous —
+      les deux se bloquent mutuellement (voir le bug de navigation résolu). */}
+  <header class="site-header">
+    <a href={homeHref} aria-label={t('nav.home')}>
+      <Logo />
+    </a>
+  </header>
   <main class="wrap form-page">
     <div class="form-card">
       <span class="eyebrow"><span class="dot"></span> {t('onb.eyebrow')}</span>
@@ -151,7 +159,13 @@ const SEXES = ['homme', 'femme', 'autre', 'non_precise'] as const;
         <div class="onb-nav">
           <a class="btn-ghost" id="onb-back" href="#" hidden>{t('onb.back')}</a>
           <button type="button" class="contact-btn" id="onb-next">{t('onb.continue')}</button>
-          <button type="submit" class="contact-btn" id="onb-submit" hidden>{t('onb.finish')}</button>
+          <button
+            type="submit"
+            class="contact-btn"
+            id="onb-submit"
+            data-saving={t('onb.saving')}
+            hidden
+          >{t('onb.finish')}</button>
         </div>
         <p class="form-note">
           <a href="#" id="onb-skip">{t('onb.skip')}</a>
@@ -317,5 +331,9 @@ const SEXES = ['homme', 'femme', 'autre', 'non_precise'] as const;
     showStep(1);
   }
 
-  main();
+  main().catch((err) => {
+    // Ne jamais laisser la page bloquée silencieusement (ex. Clerk injoignable).
+    console.error('[EBOK onboarding]', err);
+    location.href = '/';
+  });
 </script>
