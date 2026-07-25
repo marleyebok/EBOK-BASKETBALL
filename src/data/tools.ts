@@ -152,7 +152,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'forum',
     name: 'FORUM',
-    color: '#18A0C4',
+    color: '#7C3AED',
     status: 'dev',
     description: {
       fr: "L'espace d'échange de la communauté : questions, conseils et débats basket.",
