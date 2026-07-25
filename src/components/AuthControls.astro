@@ -104,7 +104,11 @@ const t = useT(lang);
         out.hidden = signedIn;
         inn.hidden = !signedIn;
         if (signedIn && !userMounted) {
-          clerk.mountUserButton(userEl);
+          // `showName` : affiche le pseudo/prénom à côté de l'avatar plutôt
+          // qu'un simple rond. Le menu du UserButton propose « Gérer le
+          // compte », qui ouvre la modale UserProfile de Clerk (sidebar
+          // Compte/Sécurité) — même mécanisme que sur Mercato.
+          clerk.mountUserButton(userEl, { showName: true, userProfileMode: 'modal' });
           userMounted = true;
         } else if (!signedIn && userMounted) {
           clerk.unmountUserButton(userEl);
