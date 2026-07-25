@@ -58,63 +58,106 @@ const t = useT(lang);
     const signInBtn = root.querySelector<HTMLElement>('.auth-signin')!;
     const signUpBtn = root.querySelector<HTMLElement>('.auth-signup')!;
 
-    const clerk = new Clerk(PUBLISHABLE_KEY);
+    const localizationPromise = import('@clerk/localizations').then((m) => m.frFR);
 
-    // Les boutons peuvent être révélés (filet de sécurité ci-dessous) avant
-    // que Clerk ait fini de charger : un clic attend `loadPromise` plutôt que
-    // d'appeler l'API Clerk trop tôt (ce qui ne faisait alors rien du tout —
-    // le bouton « Créer un compte » semblait sans effet).
+    // `clerk` est réaffectable : une instance dont le `.load()` reste bloqué
+    // (réseau coupé, bloqueur de pub…) ne « retente » jamais rien en interne
+    // si on rappelle `.load()` dessus — aucune nouvelle requête ne part, elle
+    // reste juste éternellement en attente. Le seul moyen de vraiment
+    // relancer un essai est de repartir sur une instance Clerk toute neuve.
+    let clerk = new Clerk(PUBLISHABLE_KEY);
+    let clerkReady = false;
+    let renderSetUp = false;
+    let loadAttempt: Promise<void> | null = null;
+
+    function setupRenderOnce() {
+      if (renderSetUp) return;
+      renderSetUp = true;
+      let userMounted = false;
+      const render = () => {
+        const signedIn = Boolean(clerk.user);
+        out.hidden = signedIn;
+        inn.hidden = !signedIn;
+        if (signedIn && !userMounted) {
+          clerk.mountUserButton(userEl);
+          userMounted = true;
+        } else if (!signedIn && userMounted) {
+          clerk.unmountUserButton(userEl);
+          userMounted = false;
+        }
+      };
+      render();
+      clerk.addListener(render);
+    }
+
+    // Charge Clerk à la demande, avec un timeout explicite (8s). Si ce délai
+    // est dépassé, on repart sur une INSTANCE FRAÎCHE au prochain appel
+    // (`loadAttempt` remis à zéro) plutôt que de rappeler `.load()` sur
+    // l'instance bloquée — c'était la cause du bouton « Créer un compte »
+    // resté définitivement sans effet après un premier échec réseau.
+    function ensureClerkLoaded(): Promise<void> {
+      if (clerkReady) return Promise.resolve();
+      if (!loadAttempt) {
+        const attempt = localizationPromise
+          .then((localization) => clerk.load({ localization }))
+          .then(() => {
+            clerkReady = true;
+            setupRenderOnce();
+          });
+        const attemptTimeout = new Promise<void>((_, reject) =>
+          setTimeout(() => reject(new Error('Clerk : délai de chargement dépassé')), 8000)
+        );
+        loadAttempt = Promise.race([attempt, attemptTimeout]).catch((err) => {
+          console.error('[EBOK] Échec du chargement de Clerk :', err);
+          loadAttempt = null; // permet un nouvel essai au prochain clic
+          clerk = new Clerk(PUBLISHABLE_KEY); // instance neuve pour ce prochain essai
+          throw err;
+        });
+      }
+      return loadAttempt;
+    }
+
+    // Retour visuel pendant l'attente (jusqu'à 8s en cas de souci réseau) :
+    // sans ça, un bouton qui ne réagit pas tout de suite donne l'impression
+    // de ne rien faire.
+    async function withLoadingState(btn: HTMLElement, action: () => void) {
+      const original = btn.textContent;
+      btn.setAttribute('aria-busy', 'true');
+      btn.textContent = '…';
+      try {
+        await ensureClerkLoaded();
+        action();
+      } catch {
+        // Échec malgré la tentative : le clic suivant en relancera une autre.
+      } finally {
+        btn.removeAttribute('aria-busy');
+        btn.textContent = original;
+      }
+    }
+
     // `oauthFlow: 'popup'` : Google (et les autres providers OAuth) restent
     // dans une popup plutôt qu'une redirection plein écran — la session est
     // déjà active côté client au moment où Clerk applique la redirection.
-    signInBtn.addEventListener('click', async () => {
-      await loadPromise;
-      clerk.openSignIn({ oauthFlow: 'popup' });
-    });
+    signInBtn.addEventListener('click', () =>
+      withLoadingState(signInBtn, () => clerk.openSignIn({ oauthFlow: 'popup' }))
+    );
     // Après inscription : questionnaire de bienvenue (une seule fois par
     // compte, quelle que soit l'app où l'inscription a eu lieu).
-    signUpBtn.addEventListener('click', async () => {
-      await loadPromise;
-      clerk.openSignUp({ forceRedirectUrl: '/onboarding', oauthFlow: 'popup' });
+    signUpBtn.addEventListener('click', () =>
+      withLoadingState(signUpBtn, () =>
+        clerk.openSignUp({ forceRedirectUrl: '/onboarding', oauthFlow: 'popup' })
+      )
+    );
+
+    // Premier essai automatique au chargement de la page. Ne jamais laisser
+    // les boutons invisibles en silence : on les révèle après 6s dans tous
+    // les cas (même en échec, en état déconnecté — un clic relancera Clerk).
+    const firstAttempt = ensureClerkLoaded().catch(() => {
+      out.hidden = false;
+      inn.hidden = true;
     });
-
-    // Localisation française (une seule langue sur ce site).
-    const localizationPromise = import('@clerk/localizations').then((m) => m.frFR);
-
-    const loadPromise = localizationPromise
-      .then((localization) => clerk.load({ localization }))
-      .then(() => {
-        let userMounted = false;
-        const render = () => {
-          const signedIn = Boolean(clerk.user);
-          out.hidden = signedIn;
-          inn.hidden = !signedIn;
-          if (signedIn && !userMounted) {
-            clerk.mountUserButton(userEl);
-            userMounted = true;
-          } else if (!signedIn && userMounted) {
-            clerk.unmountUserButton(userEl);
-            userMounted = false;
-          }
-        };
-        render();
-        clerk.addListener(render);
-      })
-      .catch((err) => {
-        // Ne jamais laisser les boutons invisibles en silence (souci réseau,
-        // bloqueur de pub…) : on les affiche quand même, en état déconnecté —
-        // un clic relancera Clerk plutôt que de ne rien montrer du tout.
-        console.error('[EBOK] Échec du chargement de Clerk :', err);
-        out.hidden = false;
-        inn.hidden = true;
-      });
-
-    // Clerk réessaie parfois en tâche de fond bien au-delà de quelques
-    // secondes : on révèle les boutons au bout de 6s même si `loadPromise`
-    // n'a pas encore tranché — elle continue en arrière-plan et mettra à
-    // jour l'affichage normalement dès qu'elle aboutira.
     const timeout = new Promise<void>((resolve) => setTimeout(resolve, 6000));
-    await Promise.race([loadPromise, timeout]);
+    await Promise.race([firstAttempt, timeout]);
     root.removeAttribute('data-hidden'); // révèle les contrôles dans tous les cas
   }
 </script>
