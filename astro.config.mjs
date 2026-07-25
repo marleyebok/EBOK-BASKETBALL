@@ -15,4 +15,8 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [sitemap()],
+  // L'espace compte s'ouvre sur la page commune de la galaxie.
+  redirects: {
+    '/compte': '/compte/profil',
+  },
 });

@@ -1,0 +1,166 @@
+---
+/**
+ * Coquille de l'espace compte (/compte) : sidebar repliable listant toute la
+ * galaxie EBOK + contenu. Même structure que les autres apps (cf. Playbook),
+ * pour que le compte unique ait la même page de réglages partout.
+ *
+ * Le site mère étant statique, l'état connecté est résolu côté navigateur :
+ * tant que Clerk n'a pas tranché, ni le portail ni le tableau de bord ne sont
+ * affichés (évite le clignotement) — voir le script en bas de fichier.
+ */
+import Logo from './Logo.astro';
+
+interface Props {
+  /** Section courante, pour l'état actif de la sidebar. */
+  current: 'profil' | 'general';
+}
+const { current } = Astro.props;
+
+type App = { id: string; name: string; color: string; url: string | null };
+
+// Ordre alphabétique ; Basketball (site mère) = app courante → non cliquable.
+// Les apps qui ont leur propre /compte/profil pointent directement dessus.
+const APPS: App[] = [
+  { id: 'basketball', name: 'Basketball', color: '#1F6FE5', url: null },
+  { id: 'academie', name: 'Académie', color: '#8A4CE0', url: 'https://academie.ebok.fr/' },
+  { id: 'blog', name: 'Blog', color: '#C8317E', url: 'https://blog.ebok.fr/' },
+  { id: 'event', name: 'Event', color: '#E23A3A', url: 'https://event.ebok.fr/compte/profil' },
+  { id: 'forum', name: 'Forum', color: '#18A0C4', url: 'https://forum.ebok.fr/' },
+  { id: 'medias', name: 'Médias', color: '#C9A227', url: 'https://medias.ebok.fr/' },
+  { id: 'mercato', name: 'Mercato', color: '#4CA62E', url: 'https://mercato.ebok.fr/compte/profil' },
+  { id: 'notebook', name: 'Notebook', color: '#7A86A0', url: 'https://notebook.ebok.fr/' },
+  { id: 'playbook', name: 'Playbook', color: '#E08A2B', url: 'https://playbook.ebok.fr/compte/profil' },
+  { id: 'scouting', name: 'Scouting', color: '#EA5A3C', url: 'https://scouting.ebok.fr/' },
+  { id: 'stats', name: 'Stats', color: '#2E6FD6', url: 'https://stats.ebok.fr/' },
+  { id: 'video', name: 'Vidéo', color: '#1FA98C', url: 'https://video.ebok.fr/compte/profil' },
+  { id: 'workout', name: 'Workout', color: '#A3BD18', url: 'https://workout.ebok.fr/' },
+];
+
+// Sous-sections du site mère.
+const SUB = [{ href: '/acces-anticipe', icon: '⚡', label: 'Accès anticipé' }];
+---
+
+{/* Portail de connexion — affiché si l'on n'est pas connecté. */}
+<div class="dash-gate" data-gate hidden>
+  <div class="dash-gate-card">
+    <div class="dash-gate-logo"><Logo /></div>
+    <h1>Ton espace</h1>
+    <p>
+      Connecte-toi ou crée ton compte EBOK (le compte unique de toute la galaxie) pour accéder à
+      ton profil.
+    </p>
+    <div class="dash-gate-actions">
+      <button class="dash-btn ghost" type="button" data-gate-signin>Connexion</button>
+      <button class="dash-btn" type="button" data-gate-signup>Créer un compte</button>
+    </div>
+    <a class="dash-gate-back" href="/">← Retour au site</a>
+  </div>
+</div>
+
+<div class="dash" data-dash hidden>
+  <aside class="dash-side">
+    <div class="dash-top">
+      <a class="dash-logo" href="/" title="Retour au site">
+        <span class="dash-logo-ball">🏀</span>
+        <span class="dash-label dash-logo-txt">EBOK <b>BASKETBALL</b></span>
+      </a>
+      <button class="dash-collapse" type="button" data-collapse title="Réduire">‹</button>
+    </div>
+
+    <nav class="dash-nav">
+      <a class={`dash-item${current === 'profil' ? ' active' : ''}`} href="/compte/profil">
+        <span class="dash-ic">👤</span>
+        <span class="dash-label">Mon profil</span>
+      </a>
+
+      <div class="dash-section-label dash-label">Applications</div>
+
+      {
+        APPS.map((app) =>
+          app.url === null ? (
+            <div class="dash-group">
+              <div class="dash-item dash-current">
+                <span class="dash-sq" style={`background:${app.color}`}>{app.name.charAt(0)}</span>
+                <span class="dash-label">{app.name}</span>
+              </div>
+              <div class="dash-sub">
+                {SUB.map((s) => (
+                  <a class="dash-subitem" href={s.href}>
+                    <span class="dash-ic">{s.icon}</span>
+                    <span class="dash-label">{s.label}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <a class="dash-item" href={app.url}>
+              <span class="dash-sq" style={`background:${app.color}`}>{app.name.charAt(0)}</span>
+              <span class="dash-label">{app.name}</span>
+              <span class="dash-ext dash-label">↗</span>
+            </a>
+          )
+        )
+      }
+    </nav>
+
+    <div class="dash-bottom">
+      <a class={`dash-item${current === 'general' ? ' active' : ''}`} href="/compte/general">
+        <span class="dash-ic">⚙️</span>
+        <span class="dash-label">Général</span>
+      </a>
+      <div class="dash-user dash-label" data-user-name></div>
+    </div>
+  </aside>
+
+  <main class="dash-main"><slot /></main>
+</div>
+
+<script>
+  import { loadClerk } from '../lib/clerk-client';
+
+  const gate = document.querySelector<HTMLElement>('[data-gate]')!;
+  const dash = document.querySelector<HTMLElement>('[data-dash]')!;
+
+  // Sidebar repliable (mémorisée d'une visite à l'autre).
+  const KEY = 'ebok-dash-collapsed';
+  const collapseBtn = dash.querySelector<HTMLButtonElement>('[data-collapse]')!;
+  function applyCollapsed(on: boolean) {
+    dash.classList.toggle('collapsed', on);
+    collapseBtn.textContent = on ? '›' : '‹';
+    collapseBtn.title = on ? 'Déplier' : 'Réduire';
+  }
+  applyCollapsed(localStorage.getItem(KEY) === '1');
+  collapseBtn.addEventListener('click', () => {
+    const on = !dash.classList.contains('collapsed');
+    localStorage.setItem(KEY, on ? '1' : '0');
+    applyCollapsed(on);
+  });
+
+  // Résolution de l'état connecté. `ebok:dash-ready` prévient la page (profil /
+  // général) que Clerk est prêt : elle peut alors charger ses données.
+  loadClerk()
+    .then((clerk) => {
+      if (!clerk.user) {
+        gate.hidden = false;
+        gate
+          .querySelector('[data-gate-signin]')!
+          .addEventListener('click', () => clerk.openSignIn({ oauthFlow: 'popup' }));
+        gate
+          .querySelector('[data-gate-signup]')!
+          .addEventListener('click', () =>
+            clerk.openSignUp({ forceRedirectUrl: '/onboarding', oauthFlow: 'popup' })
+          );
+        return;
+      }
+      const u = clerk.user;
+      dash.querySelector<HTMLElement>('[data-user-name]')!.textContent =
+        u.firstName || u.username || u.primaryEmailAddress?.emailAddress || 'Mon compte';
+      dash.hidden = false;
+      document.dispatchEvent(new CustomEvent('ebok:dash-ready', { detail: { clerk } }));
+    })
+    .catch((err) => {
+      // Clerk injoignable : on montre le portail plutôt qu'une page vide.
+      console.error('[EBOK] Échec du chargement de Clerk :', err);
+      gate.hidden = false;
+    });
+</script>

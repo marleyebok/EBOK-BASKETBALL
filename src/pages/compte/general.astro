@@ -1,0 +1,68 @@
+---
+export const prerender = true;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardShell from '../../components/DashboardShell.astro';
+---
+
+<BaseLayout
+  title="Général — EBOK Basketball"
+  description="Identité et sécurité de ton compte EBOK."
+>
+  <DashboardShell current="general">
+    <div class="dash-head">
+      <h1>Général</h1>
+      <p class="dash-crumb">Compte · Général — abonnement, identité et sécurité.</p>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-plan">
+        <div>
+          <span class="dash-pill approved">Plan Gratuit</span>
+          <p class="dash-muted" style="margin-top:8px">
+            Accès complet pour l'instant. Les offres premium arriveront plus tard.
+          </p>
+        </div>
+        <button class="dash-btn" type="button" disabled title="Bientôt disponible">
+          Passer premium (bientôt)
+        </button>
+      </div>
+    </div>
+
+    <div class="dash-card dash-row-between">
+      <div>
+        <strong>Session</strong>
+        <p class="dash-muted" style="margin-top:4px">
+          Te déconnecter de ton compte EBOK sur cet appareil.
+        </p>
+      </div>
+      <button class="dash-btn danger" type="button" data-signout>Se déconnecter</button>
+    </div>
+
+    <div class="dash-head" style="margin-top:26px;margin-bottom:12px">
+      <h2 style="font-size:20px">Identité &amp; sécurité</h2>
+      <p class="dash-crumb">
+        Nom, e-mail, mot de passe, appareils, suppression du compte — géré par ton compte unique
+        EBOK.
+      </p>
+    </div>
+    <div class="dash-clerk" data-user-profile></div>
+  </DashboardShell>
+</BaseLayout>
+
+<script>
+  import type { Clerk } from '@clerk/clerk-js';
+
+  /** Le shell prévient dès que Clerk est prêt et l'utilisateur connecté. */
+  document.addEventListener('ebok:dash-ready', ((event: CustomEvent<{ clerk: Clerk }>) => {
+    const { clerk } = event.detail;
+
+    // Gestion complète du compte (nom, e-mail, mot de passe, appareils,
+    // suppression) : c'est le composant UserProfile de Clerk, pas une page maison.
+    const slot = document.querySelector<HTMLDivElement>('[data-user-profile]');
+    if (slot) clerk.mountUserProfile(slot, { routing: 'hash' });
+
+    document
+      .querySelector<HTMLButtonElement>('[data-signout]')
+      ?.addEventListener('click', () => clerk.signOut({ redirectUrl: '/' }));
+  }) as EventListener);
+</script>
