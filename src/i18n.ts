@@ -8,9 +8,9 @@
 export const ui = {
   'meta.title': 'EBOK Basketball — la boîte à outils des basketteurs',
   'meta.desc':
-    "1 compte, 10 outils : la galaxie EBOK pour les coachs, joueurs et clubs de basket francophones — du terrain à l'analyse.",
+    "1 compte, 12 outils : la galaxie EBOK pour les coachs, joueurs et clubs de basket francophones — du terrain à l'analyse.",
   'nav.home': 'EBOK Basketball — accueil',
-  'hero.eyebrow': '1 compte · 10 outils',
+  'hero.eyebrow': '1 compte · 12 outils',
   'hero.titlePre': 'La boîte à outils des ',
   'hero.titleEm': 'basketteurs',
   'hero.lede':

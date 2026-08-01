@@ -24,7 +24,7 @@ YouTube, TikTok, Twitch, site web…), et mise en avant des pépites du moment.
 - Consultation **publique, sans compte** : l'annuaire doit se partager
   facilement.
 - **Proposer une fiche** : formulaire ouvert aux membres connectés
-  (compte unique EBOK — « 1 compte, 10 outils »), validation avant publication.
+  (compte unique EBOK — « 1 compte, 12 outils »), validation avant publication.
 - Filtres par catégorie, niveau, région, réseau social.
 
 ## Stack prévue (standard de la galaxie)

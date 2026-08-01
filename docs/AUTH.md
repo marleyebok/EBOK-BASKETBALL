@@ -1,4 +1,4 @@
-# « 1 compte, 10 outils » — Préparation du compte unique EBOK
+# « 1 compte, 12 outils » — Préparation du compte unique EBOK
 
 > Document de travail : l'architecture du compte unique (SSO) de la galaxie,
 > ce qui est prêt, ce qui reste à faire, et la recette d'intégration par app.
@@ -104,5 +104,5 @@ peut être déroulée avec Claude, une app à la fois.
 
 ## Le slogan
 
-> **« 1 compte, 10 outils »** — affiché sur le site mère (surtitre du héro)
+> **« 1 compte, 12 outils »** — affiché sur le site mère (surtitre du héro)
 > et utilisable partout : réseaux sociaux, README, pages d'accueil des apps.

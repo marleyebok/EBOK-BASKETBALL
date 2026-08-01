@@ -13,7 +13,7 @@ dirigeants, parents, passionnés) échangent entre eux :
 - **Fils de discussion** : questions/réponses, conseils, débats, retours
   d'expérience.
 - **Profils communautaires** : chaque message est signé du compte unique EBOK
-  (« 1 compte, 10 outils ») — pseudo, avatar et badges partagés avec le reste
+  (« 1 compte, 12 outils ») — pseudo, avatar et badges partagés avec le reste
   de la galaxie.
 - **Modération** : signalement, chartes par catégorie, rôle modérateur confié
   à des membres de confiance.
