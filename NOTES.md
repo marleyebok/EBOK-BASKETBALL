@@ -130,5 +130,10 @@ ce stade. Pour un identifiant unique partagé entre tous les outils plus tard :
 
 - La grille s'adapte automatiquement au nombre d'outils (auto-fill) : ajouter
   un outil ne demande qu'une entrée dans `tools.ts`.
+- **Interface commune de la galaxie** — voir `docs/GALAXY-UI.md`. Ce repo
+  héberge les ressources partagées (`public/ebok-footer.js`, `public/galaxy/`)
+  mais n'affiche pas lui-même le pied de page galaxie : la page d'accueil
+  **est** le hub. Même raison pour la barre galaxie, retirée de la galaxie
+  entière.
 - Pour un multilingue éventuel, externaliser les libellés d'interface (hero,
   contact, footer) dans un fichier de données comme les outils.

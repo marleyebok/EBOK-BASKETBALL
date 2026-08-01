@@ -1,12 +1,14 @@
 /* =========================================================================
    EBOK Galaxy Footer — pied de page commun aux applications EBOK.
    -------------------------------------------------------------------------
-   Fichier IDENTIQUE dans chaque repo de la galaxie (event, video, mercato,
-   playbook…), comme ebok-galaxy.js. Pour modifier le pied de page partout :
-   éditer ce fichier puis recopier la même version dans chaque repo (jusqu'à
-   la mise en place d'un paquet partagé `ebok-ui`).
+   Version de référence, hébergée par le site mère. Deux façons de l'intégrer
+   (voir docs/GALAXY-UI.md) :
 
-   Intégration : <script src="/ebok-footer.js" defer></script>
+     <script src="https://ebok.fr/ebok-footer.js" defer></script>  ← recommandé
+     <script src="/ebok-footer.js" defer></script>                 ← copie locale
+
+   Pointer sur ebok.fr évite de resynchroniser une copie par repo à chaque
+   retouche (jusqu'à la mise en place d'un paquet partagé `ebok-ui`).
    Aucune dépendance. Le pied de page s'ajoute à la fin du <body>.
 
    Volontairement SANS fond : il hérite de celui du site hôte, pour rester
@@ -28,7 +30,7 @@
   var LOGOS = 'https://ebok.fr/galaxy/';
   var CONTACT = 'contact@ebok.fr';
 
-  /* Logos défilants. Miroir de src/data/tools.ts du site mère. */
+  /* Logos défilants. Miroir de src/data/tools.ts du site mère (12 outils). */
   var APPS = [
     { file: 'ebokbasketball.png', name: 'EBOK Basketball' },
     { file: 'ebokevent.png', name: 'EBOK Event' },
@@ -39,7 +41,10 @@
     { file: 'ebokplaybook.png', name: 'EBOK Playbook' },
     { file: 'eboknotebook.png', name: 'EBOK Notebook' },
     { file: 'ebokvideo.png', name: 'EBOK Vidéo' },
-    { file: 'ebokblog.png', name: 'EBOK Blog' }
+    { file: 'ebokblog.png', name: 'EBOK Blog' },
+    { file: 'ebokforum.png', name: 'EBOK Forum' },
+    { file: 'ebokworkout.png', name: 'EBOK Workout' },
+    { file: 'ebokmedias.png', name: 'EBOK Médias' }
   ];
 
   /* Nom de l'app courante, déduit du sous-domaine (pour la phrase d'accroche). */
@@ -108,7 +113,11 @@
     '.ebokf-track{animation:none;}.ebokf-marquee{overflow-x:auto;}}',
     /* Espace compte : la sidebar occupe toute la hauteur, pas de pied de page.
        Fonctionne aussi après une navigation côté client. */
-    'body:has(.dash) .ebokf,body:has(.dash-gate) .ebokf{display:none;}'
+    'body:has(.dash) .ebokf,body:has(.dash-gate) .ebokf{display:none;}',
+    /* Barre galaxie retirée de la galaxie (cf. docs/GALAXY-UI.md). Filet de
+       sécurité : si une app charge encore son ebok-galaxy.js, la barre est
+       masquée dès l'arrivée de ce pied de page, sans attendre son retrait. */
+    '.ebokg-bar{display:none!important;}'
   ].join('');
 
   function esc(s) {

@@ -34,7 +34,8 @@ dirigeants, parents, passionnés) échangent entre eux :
   [EBOK-BASKETBALL](https://github.com/marleyebok/EBOK-BASKETBALL))
 - **Neon Postgres**, schéma `forum` + référence à la table partagée
   `shared.users`
-- Barre commune `ebok-galaxy.js` en haut de page, comme sur toutes les apps
+- Pied de page commun `ebok-footer.js` en bas de page, comme sur toutes
+  les apps (voir `docs/GALAXY-UI.md` du repo EBOK-BASKETBALL)
 
 ## Statut
 
